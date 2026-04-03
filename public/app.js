@@ -275,9 +275,10 @@ function renderMergedTimeline(day, itineraryItems) {
   if (el) {
     const hint = document.createElement("div");
     hint.style.cssText = "padding:16px 0 4px;";
+    const btnLabel = day === 'backup' ? '新增景點' : '新增自訂行程';
     hint.innerHTML = `<button class="btn-add-inline" onclick="openModal()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      新增自訂行程
+      ${btnLabel}
     </button>`;
     el.appendChild(hint);
   }
@@ -369,15 +370,12 @@ function renderBookings(day) {
 
   const dayBookings = bookings.filter(b => String(b.day) === String(day));
 
-  if (dayBookings.length === 0) {
+  const isBackup = String(day) === 'backup';
+  if (dayBookings.length === 0 && !isBackup) {
     el.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">📋</div>
-        <p>還沒有預訂資訊</p>
-        <button class="btn-add-inline" onclick="openModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增預訂
-        </button>
+        <p>還沒有自訂行程</p>
       </div>
     `;
     return;
@@ -429,8 +427,7 @@ function renderBackup(main) {
         </div>
       `).join("")}
     </div>
-    <div class="section-label" style="margin-top: 24px">備案預訂</div>
-    <div class="bookings-list" id="bookings-backup"></div>
+    <div class="bookings-list" id="bookings-backup" style="margin-top:16px;"></div>
   `;
 
   main.appendChild(section);
