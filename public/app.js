@@ -13,7 +13,7 @@ const ITINERARY = {
       { id: "d1-dps-arrive", time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
       { id: "d1-indigo", time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
       { id: "d1-osteria", time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Pantai Berawa No.7, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { id: "d1-santanera", time: "19:35", name: "Santanera", type: "activity", duration: "~1h", address: "Jl. Pantai Berawa, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d1-santanera", time: "19:35", name: "Santanera", type: "restaurant", duration: "~1h", address: "Jl. Pantai Berawa, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali" },
       { id: "d1-indigo-sleep", time: "21:08", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
     ]
   },
