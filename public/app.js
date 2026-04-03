@@ -252,14 +252,21 @@ function renderMergedTimeline(day, itineraryItems) {
     status: b.status,
   }));
 
-  // Merge and sort by time
+  // Merge and sort by resolved display time (taking overrideTime into account)
   const allItems = [...itineraryItems, ...bookingItems]
     .filter(item => !item._removed)
     .sort((a, b) => {
-      const ta = a.time || "99:99";
-      const tb = b.time || "99:99";
+      const ta = getDisplayTime(a, day) || "99:99";
+      const tb = getDisplayTime(b, day) || "99:99";
       return ta.localeCompare(tb);
     });
+
+  function getDisplayTime(item, day) {
+    if (item._isBooking) return item.time || null;
+    const key = `${day}-${slugKey(item)}`;
+    const saved = placeNotes[key] || {};
+    return saved.overrideTime || item.time || null;
+  }
 
   renderTimeline(day, allItems);
 
@@ -452,6 +459,10 @@ function setupPlaceModal() {
         <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
       </div>
       <div class="form-group">
+        <label>時間（可修改）</label>
+        <input type="time" id="place-time-input" />
+      </div>
+      <div class="form-group">
         <label>Google Maps 連結（可覆蓋預設搜尋）</label>
         <input type="url" id="place-maps-input" placeholder="貼入 Google Maps 分享連結" />
       </div>
@@ -490,6 +501,7 @@ function setupPlaceModal() {
     const key = `${day}-${slugKey(item || index)}`;
     placeNotes[key] = {
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
+      overrideTime: document.getElementById("place-time-input").value.trim(),
       mapsUrl: document.getElementById("place-maps-input").value.trim(),
       notes: document.getElementById("place-notes").value.trim(),
     };
@@ -598,6 +610,7 @@ function openPlaceModal(day, index) {
   mapsBtn.style.display = "flex";
 
   document.getElementById("place-reservation-time").value = saved.reservationTime || "";
+  document.getElementById("place-time-input").value = saved.overrideTime || item.time || "";
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
