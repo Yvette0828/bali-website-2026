@@ -8,12 +8,12 @@ const ITINERARY = {
     title: "抵達峇里島",
     subtitle: "長途飛行 → Canggu 安頓",
     items: [
-      { time: "06:50", name: "TPE 桃園機場出發", type: "transport", duration: "飛行 ~5.5h" },
-      { time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h" },
-      { time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in" },
-      { time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h" },
-      { time: "19:35", name: "Santanera", type: "activity", duration: "~1h" },
-      { time: "21:08", name: "英迪格酒店", type: "hotel", duration: "就寢" },
+      { time: "06:50", name: "TPE 桃園機場出發", type: "transport", duration: "飛行 ~5.5h", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
+      { time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Pantai Berawa No.7, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "19:35", name: "Santanera", type: "activity", duration: "~1h", address: "Jl. Pantai Berawa, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "21:08", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
     ]
   },
   2: {
@@ -21,15 +21,15 @@ const ITINERARY = {
     title: "Canggu 漫遊",
     subtitle: "早午餐、Spa、海灘夕陽",
     items: [
-      { time: "08:00", name: "英迪格酒店", type: "hotel", duration: "出發" },
-      { time: "08:37", name: "Milk & Madu Beach Road", type: "restaurant", duration: "早餐 ~1h" },
-      { time: "09:40", name: "Gigi Susu", type: "activity", duration: "~1h" },
-      { time: "10:35", name: "Sensatia – Batu Bolong Canggu", type: "activity", duration: "~1h" },
-      { time: "11:38", name: "La Brisa Sunday Market", type: "activity", duration: "~2.5h" },
-      { time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "Spa ~3h" },
-      { time: "17:42", name: "La Brisa Bali | Beach Club", type: "activity", duration: "夕陽 ~1.5h" },
-      { time: "19:11", name: "Naughty Nuri's Warung Seminyak", type: "restaurant", duration: "晚餐 ~1h" },
-      { time: "20:26", name: "英迪格酒店", type: "hotel", duration: "就寢" },
+      { time: "08:00", name: "英迪格酒店", type: "hotel", duration: "出發", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { time: "08:37", name: "Milk & Madu Beach Road", type: "restaurant", duration: "早餐 ~1h", address: "Jl. Pantai Batu Mejan, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "09:40", name: "Gigi Susu", type: "activity", duration: "~1h", address: "Canggu, Kuta Utara, Badung Regency, Bali, Indonesia" },
+      { time: "10:35", name: "Sensatia – Batu Bolong Canggu", type: "activity", duration: "~1h", address: "Jl. Batu Bolong No.56, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "11:38", name: "La Brisa Sunday Market", type: "activity", duration: "~2.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "Spa ~3h", address: "Jl. Pantai Batu Bolong No.97, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "17:42", name: "La Brisa Bali | Beach Club", type: "activity", duration: "夕陽 ~1.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "19:11", name: "Naughty Nuri's Warung Seminyak", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Raya Petitenget No.17, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "20:26", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
     ]
   },
   3: {
@@ -37,14 +37,15 @@ const ITINERARY = {
     title: "前往烏布",
     subtitle: "猴子森林、皇宮、聖河",
     items: [
-      { time: "08:00", name: "英迪格酒店 Check-out", type: "hotel", duration: "出發烏布" },
-      { time: "09:15", name: "Sisterfields", type: "restaurant", duration: "早午餐 ~1.5h" },
-      { time: "11:00", name: "ULU SPA Club", type: "activity", duration: "Spa ~1.5h" },
-      { time: "13:46", name: "Kurasu Ubud", type: "restaurant", duration: "咖啡 ~1h" },
-      { time: "14:58", name: "Sacred Monkey Forest Sanctuary", type: "activity", duration: "~1h" },
-      { time: "16:05", name: "烏布皇宮", type: "activity", duration: "~1h" },
-      { time: "17:08", name: "烏布水皇宮", type: "activity", duration: "~1h" },
-      { time: "18:18", name: "Sayan Point", type: "restaurant", duration: "晚餐" },
+      { time: "08:00", name: "英迪格酒店 Check-out", type: "hotel", duration: "出發烏布", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { time: "09:15", name: "Sisterfields", type: "restaurant", duration: "早午餐 ~1.5h", address: "Jl. Subak Sari No.20, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "11:00", name: "ULU SPA Club", type: "activity", duration: "Spa ~1.5h", address: "Jl. Raya Uluwatu, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali" },
+      { time: "13:46", name: "Kurasu Ubud", type: "restaurant", duration: "咖啡 ~1h", address: "Jl. Raya Sanggingan, Lungsiakan, Kedewatan, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
+      { time: "14:58", name: "Sacred Monkey Forest Sanctuary", type: "activity", duration: "~1h", address: "Jl. Monkey Forest, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
+      { time: "16:05", name: "烏布皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud No.8, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
+      { time: "17:08", name: "烏布水皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
+      { time: "18:18", name: "Sayan Point", type: "restaurant", duration: "晚餐", address: "Jl. Raya Sayan, Sayan, Ubud, Kabupaten Gianyar, Bali" },
+      { time: "21:00", name: "Airbnb 烏布", type: "hotel", duration: "check-in", address: "Jalan Tirta Tawar Kutuh, 烏布德, 峇里島 80571, 印尼" },
     ]
   },
   4: {
@@ -52,12 +53,12 @@ const ITINERARY = {
     title: "火山日出 & 梯田",
     subtitle: "凌晨出發、巴杜爾火山、德哥拉朗",
     items: [
-      { time: "03:00", name: "巴杜爾火山日出健行", type: "activity", duration: "~5h" },
-      { time: "08:56", name: "Tis Cafe", type: "restaurant", duration: "早餐 ~1.5h" },
-      { time: "10:28", name: "德哥拉朗梯田", type: "activity", duration: "~1h" },
-      { time: "12:02", name: "The Garcia Ubud", type: "hotel", duration: "check-in" },
-      { time: "13:41", name: "聖泉寺", type: "activity", duration: "~1h" },
-      { time: "15:21", name: "The Garcia Ubud", type: "hotel", duration: "休息" },
+      { time: "03:00", name: "巴杜爾火山日出健行", type: "activity", duration: "~5h", address: "Mount Batur, Kintamani, Bangli Regency, Bali, Indonesia" },
+      { time: "08:56", name: "Tis Cafe", type: "restaurant", duration: "早餐 ~1.5h", address: "Jl. Raya Penelokan, Batur, Kintamani, Bangli Regency, Bali" },
+      { time: "10:28", name: "德哥拉朗梯田", type: "activity", duration: "~1h", address: "Tegallalang Rice Terrace, Tegallalang, Gianyar Regency, Bali" },
+      { time: "12:02", name: "The Garcia Ubud", type: "hotel", duration: "check-in", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { time: "13:41", name: "聖泉寺", type: "activity", duration: "~1h", address: "Pura Tirta Empul, Jl. Tirta, Manukaya, Kec. Tampaksiring, Kabupaten Gianyar, Bali" },
+      { time: "15:21", name: "The Garcia Ubud", type: "hotel", duration: "休息", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
     ]
   },
   5: {
@@ -65,9 +66,9 @@ const ITINERARY = {
     title: "返回台灣",
     subtitle: "烏布 → 機場 → 台北",
     items: [
-      { time: "07:00", name: "The Garcia Ubud Check-out", type: "hotel", duration: "最後早餐" },
-      { time: "13:30", name: "DPS 伍拉賴機場", type: "transport", duration: "~3h 候機" },
-      { time: "22:00", name: "TPE 桃園機場抵達", type: "transport", duration: "回到台灣 🎉" },
+      { time: "07:00", name: "The Garcia Ubud Check-out", type: "hotel", duration: "最後早餐", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { time: "13:30", name: "DPS 伍拉賴機場", type: "transport", duration: "~3h 候機", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
+      { time: "22:00", name: "TPE 桃園機場抵達", type: "transport", duration: "回到台灣 🎉", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
     ]
   },
   backup: {
@@ -75,8 +76,8 @@ const ITINERARY = {
     title: "備案景點",
     subtitle: "排不進去但想去的地方",
     items: [
-      { name: "Tanjung Benoa Beach", type: "activity", desc: "海邊活動、水上運動" },
-      { name: "Mudra Cafe", type: "restaurant", desc: "特色咖啡廳" },
+      { name: "Tanjung Benoa Beach", type: "activity", desc: "海邊活動、水上運動", address: "Tanjung Benoa, Kec. Kuta Sel., Kabupaten Badung, Bali" },
+      { name: "Mudra Cafe", type: "restaurant", desc: "特色咖啡廳", address: "Ubud, Kabupaten Gianyar, Bali, Indonesia" },
     ]
   }
 };
@@ -90,9 +91,11 @@ const TYPE_ICONS = {
 };
 
 let bookings = [];
+let placeNotes = {}; // { "day-index": { reservationTime, notes } }
 let currentDay = "1";
 let editingId = null;
 let selectedType = "restaurant";
+let currentPlaceDetail = null;
 
 // === Init ===
 document.addEventListener("DOMContentLoaded", async () => {
@@ -100,6 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderDay(currentDay);
   setupTabs();
   setupModal();
+  setupPlaceModal();
   hideLoading();
 });
 
@@ -107,13 +111,13 @@ function hideLoading() {
   document.getElementById("loading").style.display = "none";
 }
 
-// === Data Layer (localStorage with Netlify Function sync) ===
+// === Data Layer ===
 async function loadBookings() {
-  // Load from localStorage first (instant)
   const local = localStorage.getItem("bali_bookings");
   if (local) bookings = JSON.parse(local);
+  const localNotes = localStorage.getItem("bali_place_notes");
+  if (localNotes) placeNotes = JSON.parse(localNotes);
 
-  // Then sync from server
   try {
     const res = await fetch("/api/bookings");
     if (res.ok) {
@@ -122,20 +126,24 @@ async function loadBookings() {
         bookings = data.bookings;
         localStorage.setItem("bali_bookings", JSON.stringify(bookings));
       }
+      if (data.placeNotes) {
+        placeNotes = data.placeNotes;
+        localStorage.setItem("bali_place_notes", JSON.stringify(placeNotes));
+      }
     }
   } catch (e) {
-    // Offline: use localStorage
     console.log("Offline mode: using local data");
   }
 }
 
 async function saveBookings() {
   localStorage.setItem("bali_bookings", JSON.stringify(bookings));
+  localStorage.setItem("bali_place_notes", JSON.stringify(placeNotes));
   try {
     await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bookings })
+      body: JSON.stringify({ bookings, placeNotes })
     });
   } catch (e) {
     console.log("Offline: saved locally only");
@@ -196,6 +204,10 @@ function renderTimeline(day, items) {
   if (!el) return;
 
   items.forEach((item, i) => {
+    const key = `${day}-${i}`;
+    const saved = placeNotes[key] || {};
+    const hasNote = saved.reservationTime || saved.notes;
+
     const wrapper = document.createElement("div");
     wrapper.className = "timeline-item";
 
@@ -205,15 +217,28 @@ function renderTimeline(day, items) {
         <div class="timeline-dot"></div>
         ${i < items.length - 1 ? '<div class="timeline-line"></div>' : ""}
       </div>
-      <div class="timeline-card type-${item.type}">
+      <div class="timeline-card type-${item.type}" data-day="${day}" data-index="${i}">
         <div class="card-name">
           <span class="card-type-dot"></span>
           ${item.name}
+          <span class="card-chevron">›</span>
         </div>
         ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
+        ${saved.reservationTime ? `<div class="card-reservation-badge">🕐 ${saved.reservationTime}</div>` : ""}
+        ${hasNote && saved.notes ? `<div class="card-duration" style="margin-top:4px;color:var(--text-tertiary)">📝 ${saved.notes.substring(0,40)}${saved.notes.length>40?'…':''}</div>` : ""}
       </div>
     `;
+
     el.appendChild(wrapper);
+  });
+
+  // Click on timeline cards
+  el.addEventListener("click", e => {
+    const card = e.target.closest(".timeline-card");
+    if (!card) return;
+    const d = card.dataset.day;
+    const idx = parseInt(card.dataset.index);
+    openPlaceModal(d, idx);
   });
 }
 
@@ -270,11 +295,12 @@ function renderBackup(main) {
     </div>
     <div class="section-label">想去的地方</div>
     <div class="backup-grid">
-      ${data.items.map(item => `
-        <div class="backup-card">
+      ${data.items.map((item, i) => `
+        <div class="backup-card" onclick="openBackupPlace(${i})">
           <div class="backup-card-icon">${TYPE_ICONS[item.type]}</div>
           <div class="backup-card-name">${item.name}</div>
           <div class="backup-card-desc">${item.desc}</div>
+          ${item.address ? `<div class="backup-maps-hint">點擊開啟地圖</div>` : ""}
         </div>
       `).join("")}
     </div>
@@ -286,7 +312,112 @@ function renderBackup(main) {
   renderBookings("backup");
 }
 
-// === Modal ===
+// === Place Detail Modal ===
+function setupPlaceModal() {
+  // Inject place modal HTML
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "place-modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal" id="place-modal">
+      <div class="modal-header">
+        <h2 id="place-modal-title">地點詳情</h2>
+        <button class="btn-icon" id="place-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="place-modal-meta" class="place-meta"></div>
+      <a id="place-maps-btn" href="#" target="_blank" rel="noopener" class="maps-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        在 Google Maps 開啟
+      </a>
+      <div class="place-divider"></div>
+      <div class="form-group">
+        <label>預約時間（可自行填寫）</label>
+        <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
+      </div>
+      <div class="form-group">
+        <label>備註</label>
+        <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-primary" id="place-save-btn">儲存</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById("place-modal-close").onclick = closePlaceModal;
+  overlay.onclick = e => { if (e.target === overlay) closePlaceModal(); };
+
+  document.getElementById("place-save-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const key = `${day}-${index}`;
+    placeNotes[key] = {
+      reservationTime: document.getElementById("place-reservation-time").value.trim(),
+      notes: document.getElementById("place-notes").value.trim(),
+    };
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("已儲存 ✓");
+  };
+}
+
+function openPlaceModal(day, index) {
+  const item = ITINERARY[day]?.items[index];
+  if (!item) return;
+  currentPlaceDetail = { day, index };
+
+  const key = `${day}-${index}`;
+  const saved = placeNotes[key] || {};
+
+  document.getElementById("place-modal-title").textContent = item.name;
+
+  // Meta info
+  const metaEl = document.getElementById("place-modal-meta");
+  metaEl.innerHTML = `
+    ${item.time ? `<span class="place-tag">${item.time}</span>` : ""}
+    ${item.duration ? `<span class="place-tag">${item.duration}</span>` : ""}
+    <span class="place-tag type-tag">${TYPE_ICONS[item.type]} ${labelForType(item.type)}</span>
+    ${item.address ? `<div class="place-address">📍 ${item.address}</div>` : ""}
+  `;
+
+  // Google Maps link
+  const mapsBtn = document.getElementById("place-maps-btn");
+  if (item.address) {
+    mapsBtn.href = `https://maps.google.com/?q=${encodeURIComponent(item.address)}`;
+    mapsBtn.style.display = "flex";
+  } else {
+    mapsBtn.href = `https://maps.google.com/?q=${encodeURIComponent(item.name + " Bali")}`;
+    mapsBtn.style.display = "flex";
+  }
+
+  document.getElementById("place-reservation-time").value = saved.reservationTime || "";
+  document.getElementById("place-notes").value = saved.notes || "";
+
+  document.getElementById("place-modal-overlay").classList.add("open");
+  setTimeout(() => document.getElementById("place-reservation-time").focus(), 350);
+}
+
+function closePlaceModal() {
+  document.getElementById("place-modal-overlay").classList.remove("open");
+  currentPlaceDetail = null;
+}
+
+function openBackupPlace(index) {
+  const item = ITINERARY.backup.items[index];
+  if (!item || !item.address) return;
+  window.open(`https://maps.google.com/?q=${encodeURIComponent(item.address)}`, "_blank");
+}
+
+function labelForType(type) {
+  const map = { restaurant: "餐廳", activity: "活動", hotel: "住宿", transport: "交通", other: "其他" };
+  return map[type] || type;
+}
+
+// === Booking Modal ===
 function setupModal() {
   document.getElementById("btn-add").onclick = () => openModal();
   document.getElementById("modal-close").onclick = closeModal;
@@ -294,7 +425,6 @@ function setupModal() {
     if (e.target === e.currentTarget) closeModal();
   };
 
-  // Type chips
   document.getElementById("type-chips").addEventListener("click", e => {
     const chip = e.target.closest(".chip");
     if (!chip) return;
@@ -368,7 +498,6 @@ async function saveBooking() {
   await saveBookings();
   closeModal();
 
-  // Switch to the day of the saved booking
   currentDay = booking.day;
   document.querySelectorAll(".day-tab").forEach(t => {
     t.classList.toggle("active", t.dataset.day === String(currentDay));

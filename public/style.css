@@ -295,6 +295,86 @@ body {
   transform: scale(0.98);
 }
 
+.card-chevron {
+  margin-left: auto;
+  font-size: 18px;
+  color: var(--text-tertiary);
+  line-height: 1;
+  font-weight: 300;
+}
+
+.card-reservation-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-weight: 600;
+}
+
+/* Place Modal */
+.place-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+
+.place-tag {
+  font-size: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.place-address {
+  width: 100%;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.maps-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid rgba(27,94,32,0.15);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.maps-btn:active {
+  background: #c8e6c9;
+  transform: scale(0.98);
+}
+
+.place-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0 16px;
+}
+
+.backup-maps-hint {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
 .card-type-dot {
   width: 6px;
   height: 6px;
