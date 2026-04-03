@@ -480,16 +480,19 @@ function setupPlaceModal() {
           <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
         </div>
       </div>
-      <div id="place-manage-actions" style="display:none;margin-bottom:12px;">
+      <div class="form-actions" style="flex-wrap:nowrap;gap:6px;margin-top:16px;">
+        <button type="button" class="place-action-btn btn-visited" id="place-visited-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;">✓ 去過</button>
+        <button type="button" class="place-action-btn btn-visited" id="place-set-tentative-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;display:none;">❓ 待定</button>
+        <button type="button" class="place-action-btn btn-remove-plan" id="place-remove-confirmed-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;display:none;">× 移除</button>
+        <button type="button" class="place-action-btn btn-primary" id="place-save-btn" style="flex:1;font-size:12px;padding:10px 6px;">儲存</button>
+      </div>
+      <div id="place-tentative-actions" style="display:none;margin-top:8px;">
         <div class="tentative-btns">
-          <button type="button" class="btn-visited" id="place-set-tentative-btn">❓ 改為待定</button>
-          <button type="button" class="btn-remove-plan" id="place-remove-confirmed-btn">× 移除行程</button>
+          <button type="button" class="btn-confirm-plan" id="place-confirm-btn">✓ 正式加入</button>
+          <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
         </div>
       </div>
-      <div class="form-actions">
-        <button type="button" class="btn-visited" id="place-visited-btn">✓ 標記去過</button>
-        <button type="button" class="btn-primary" id="place-save-btn">儲存</button>
-      </div>
+      <div id="place-manage-actions" style="display:none;"></div>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -625,11 +628,16 @@ function openPlaceModal(day, index) {
   visitedBtn.classList.toggle("btn-visited-active", isVisited);
   visitedBtn.style.display = isTentativeItem ? "none" : "";
 
+  // Set-tentative and remove buttons (only for non-tentative confirmed items)
+  const setTentativeBtn = document.getElementById("place-set-tentative-btn");
+  const removeConfirmedBtn = document.getElementById("place-remove-confirmed-btn");
+  setTentativeBtn.style.display = (!isTentativeItem && !item._removed) ? "" : "none";
+  removeConfirmedBtn.style.display = (!isTentativeItem && !item._removed) ? "" : "none";
+
   const tentativeActions = document.getElementById("place-tentative-actions");
   tentativeActions.style.display = isTentativeItem ? "block" : "none";
 
-  const manageActions = document.getElementById("place-manage-actions");
-  manageActions.style.display = (!isTentativeItem && !item._removed) ? "block" : "none";
+  document.getElementById("place-manage-actions").style.display = "none";
 
   document.getElementById("place-modal-overlay").classList.add("open");
   setTimeout(() => document.getElementById("place-reservation-time").focus(), 350);
@@ -789,6 +797,8 @@ function openBookingDetail(b) {
   if (isTentativeB) {
     tentativeActions.style.display = "block";
     manageActions.style.display = "none";
+    document.getElementById("place-set-tentative-btn").style.display = "none";
+    document.getElementById("place-remove-confirmed-btn").style.display = "none";
     document.getElementById("place-confirm-btn").onclick = async () => {
       b.status = 'confirmed';
       const idx = bookings.findIndex(x => x.id === b.id);
@@ -801,7 +811,9 @@ function openBookingDetail(b) {
     };
   } else {
     tentativeActions.style.display = "none";
-    manageActions.style.display = "block";
+    manageActions.style.display = "none";
+    document.getElementById("place-set-tentative-btn").style.display = "";
+    document.getElementById("place-remove-confirmed-btn").style.display = "";
     document.getElementById("place-set-tentative-btn").onclick = async () => {
       b.status = 'tentative';
       const idx = bookings.findIndex(x => x.id === b.id);

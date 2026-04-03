@@ -685,7 +685,16 @@ body {
 
 .tentative-btns {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+}
+
+.tentative-btns .btn-visited,
+.tentative-btns .btn-confirm-plan,
+.tentative-btns .btn-remove-plan {
+  flex: 1;
+  font-size: 13px;
+  padding: 10px 8px;
+  white-space: nowrap;
 }
 
 .btn-confirm-plan {
