@@ -335,7 +335,7 @@ function renderTimeline(day, items) {
         <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative' : ''}" data-day="${day}" data-index="${i}">
           <div class="card-name">
             <span class="card-type-dot"></span>
-            <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
+            <span class="${isVisited ? 'card-name-visited' : ''}">${saved.overrideName || item.name}</span>
             ${isTentative ? '<span class="tentative-badge">❓ 待定</span>' : ''}
             ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
             <span class="card-chevron">›</span>
@@ -462,6 +462,10 @@ function setupPlaceModal() {
         <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
       </div>
       <div class="form-group">
+        <label>標題（可修改）</label>
+        <input type="text" id="place-name-input" placeholder="輸入自訂名稱" />
+      </div>
+      <div class="form-group">
         <label>時間（可修改）</label>
         <input type="time" id="place-time-input" />
       </div>
@@ -505,7 +509,9 @@ function setupPlaceModal() {
     const { day, index } = currentPlaceDetail;
     const item = ITINERARY[day]?.items[index];
     const key = `${day}-${slugKey(item || index)}`;
+    const newName = document.getElementById("place-name-input").value.trim();
     placeNotes[key] = {
+      overrideName: newName !== item.name ? newName : "",
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
       overrideTime: document.getElementById("place-time-input").value.trim(),
       mapsUrl: document.getElementById("place-maps-input").value.trim(),
@@ -593,7 +599,7 @@ function openPlaceModal(day, index) {
   const key = `${day}-${slugKey(item)}`;
   const saved = placeNotes[key] || {};
 
-  document.getElementById("place-modal-title").textContent = item.name;
+  document.getElementById("place-modal-title").textContent = (placeNotes[key]?.overrideName) || item.name;
 
   // Meta info
   const metaEl = document.getElementById("place-modal-meta");
@@ -615,6 +621,7 @@ function openPlaceModal(day, index) {
   }
   mapsBtn.style.display = "flex";
 
+  document.getElementById("place-name-input").value = saved.overrideName || item.name || "";
   document.getElementById("place-reservation-time").value = saved.reservationTime || "";
   document.getElementById("place-time-input").value = saved.overrideTime || item.time || "";
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
