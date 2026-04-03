@@ -144,6 +144,7 @@ exports.handler = async (event) => {
     }
     const targetEmail = body.targetEmail;
     authData.pending = authData.pending.filter(p => p.email !== targetEmail);
+    authData.approved = authData.approved.filter(e => e !== targetEmail); // also remove from approved
     if (!authData.rejected.includes(targetEmail)) authData.rejected.push(targetEmail);
     await saveAuthData(authData);
     return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
