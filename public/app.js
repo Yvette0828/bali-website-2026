@@ -646,7 +646,6 @@ function openPlaceModal(day, index) {
   }
   mapsBtn.style.display = "flex";
 
-  document.getElementById("place-name-input").value = saved.overrideName || item.name || "";
   document.getElementById("place-reservation-time").value = saved.reservationTime || "";
   document.getElementById("place-time-input").value = saved.overrideTime || item.time || "";
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
