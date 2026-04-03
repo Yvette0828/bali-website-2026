@@ -66,7 +66,7 @@ const ITINERARY = {
     title: "返回台灣",
     subtitle: "烏布 → 機場 → 台北",
     items: [
-      { time: "07:00", name: "The Garcia Ubud Check-out", type: "hotel", duration: "最後早餐", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { time: "07:00", name: "Morning Yoga @ The Garcia Ubud", type: "activity", duration: "飯店晨間瑜伽", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
       { time: "13:30", name: "DPS 伍拉賴機場", type: "transport", duration: "~3h 候機", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
       { time: "22:00", name: "TPE 桃園機場抵達", type: "transport", duration: "回到台灣 🎉", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
     ]
