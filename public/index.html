@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>峇里島 2026 🌴</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-blur"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="header-emoji">🌴</span>
+        <div>
+          <h1>峇里島 2026</h1>
+          <p>Apr 11–15 · 5 天 4 夜</p>
+        </div>
+      </div>
+      <button class="btn-icon" id="btn-add" title="新增預訂">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Day Tabs -->
+  <nav class="day-tabs" id="day-tabs">
+    <button class="day-tab active" data-day="1">Day 1</button>
+    <button class="day-tab" data-day="2">Day 2</button>
+    <button class="day-tab" data-day="3">Day 3</button>
+    <button class="day-tab" data-day="4">Day 4</button>
+    <button class="day-tab" data-day="5">Day 5</button>
+    <button class="day-tab" data-day="backup">備案</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content" id="main-content">
+    <div class="loading-state" id="loading">
+      <div class="spinner"></div>
+      <p>載入中...</p>
+    </div>
+  </main>
+
+  <!-- Booking Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">新增預訂資訊</h2>
+        <button class="btn-icon" id="modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="booking-form">
+        <input type="hidden" id="form-id" />
+        <div class="form-group">
+          <label>地點名稱</label>
+          <input type="text" id="form-place" placeholder="例：Naughty Nuri's" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>日期</label>
+            <select id="form-day" required>
+              <option value="1">Day 1 (4/11)</option>
+              <option value="2">Day 2 (4/12)</option>
+              <option value="3">Day 3 (4/13)</option>
+              <option value="4">Day 4 (4/14)</option>
+              <option value="5">Day 5 (4/15)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>時間</label>
+            <input type="time" id="form-time" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>類型</label>
+          <div class="type-chips" id="type-chips">
+            <button type="button" class="chip active" data-type="restaurant">🍽️ 餐廳</button>
+            <button type="button" class="chip" data-type="activity">🎯 活動</button>
+            <button type="button" class="chip" data-type="hotel">🏨 住宿</button>
+            <button type="button" class="chip" data-type="transport">✈️ 交通</button>
+            <button type="button" class="chip" data-type="other">📌 其他</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>預訂時間（預約的 timeslot）</label>
+          <input type="text" id="form-reservation" placeholder="例：18:30 for 2 people" />
+        </div>
+        <div class="form-group">
+          <label>預訂號碼 / 確認碼</label>
+          <input type="text" id="form-confirmation" placeholder="例：#12345" />
+        </div>
+        <div class="form-group">
+          <label>備註</label>
+          <textarea id="form-notes" placeholder="任何備注..." rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-danger" id="btn-delete" style="display:none">刪除</button>
+          <button type="submit" class="btn-primary" id="btn-save">儲存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
