@@ -439,24 +439,26 @@ function renderBackupBookings() {
   if (!el) return;
   const dayBookings = bookings.filter(b => String(b.day) === "backup");
 
-  el.innerHTML = "";
-  dayBookings.forEach(b => {
-    const isTentativeBooking = b.status === "tentative";
-    const item = document.createElement("div");
-    item.className = `booking-item${isTentativeBooking ? " booking-tentative" : ""}`;
-    item.onclick = () => openBookingDetail(b);
-    item.innerHTML = `
-      <div class="booking-icon">${TYPE_ICONS[b.type] || "📌"}</div>
-      <div class="booking-info">
-        <div class="booking-name">${b.place}${isTentativeBooking ? ' <span class="tentative-badge">❓ 待定</span>' : ""}</div>
-        <div class="booking-meta">
-          ${b.time ? `<span class="booking-tag">${b.time}</span>` : ""}
-          ${b.notes ? `<span class="booking-tag">${b.notes.substring(0,30)}</span>` : ""}
-        </div>
-      </div>
-    `;
-    el.appendChild(item);
-  });
+  // Wrap in grid same as backup-grid
+  if (dayBookings.length > 0) {
+    const grid = document.createElement("div");
+    grid.className = "backup-grid";
+    grid.style.marginTop = "10px";
+    dayBookings.forEach(b => {
+      const isTentativeBooking = b.status === "tentative";
+      const card = document.createElement("div");
+      card.className = `backup-card${isTentativeBooking ? " tentative" : ""}`;
+      card.onclick = () => openBookingDetail(b);
+      card.innerHTML = `
+        <div class="backup-card-icon">${TYPE_ICONS[b.type] || "📌"}</div>
+        <div class="backup-card-name">${b.place}${isTentativeBooking ? ' <span class="tentative-badge">❓</span>' : ""}</div>
+        <div class="backup-card-desc">${b.notes || b.reservation || ""}</div>
+        <div class="backup-maps-hint">點擊編輯</div>
+      `;
+      grid.appendChild(card);
+    });
+    el.appendChild(grid);
+  }
 
   // Always show add button
   const hint = document.createElement("div");
