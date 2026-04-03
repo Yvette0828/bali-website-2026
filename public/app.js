@@ -296,18 +296,18 @@ function renderTimeline(day, items) {
     if (isBooking) {
       // Render booking card inline in timeline
       const b = item._booking;
+      const mapsUrl = b.mapsUrl || `https://maps.google.com/?q=${encodeURIComponent(b.place + ', Bali')}`;
       wrapper.innerHTML = `
         <div class="timeline-left">
           <div class="timeline-time">${item.time || ""}</div>
-          <div class="timeline-dot booking-dot"></div>
+          <div class="timeline-dot"></div>
           ${i < items.length - 1 ? '<div class="timeline-line"></div>' : ""}
         </div>
-        <div class="timeline-card booking-inline type-${item.type} ${isTentativeBooking ? 'tentative' : ''}" data-booking-id="${b.id}">
+        <div class="timeline-card type-${item.type} ${isTentativeBooking ? 'tentative' : ''}" data-booking-id="${b.id}" data-maps-url="${mapsUrl}">
           <div class="card-name">
             <span class="card-type-dot"></span>
             <span>${item.name}</span>
             ${isTentativeBooking ? '<span class="tentative-badge">❓ 待定</span>' : ''}
-            <span class="booking-inline-badge">✏️ 自訂</span>
             <span class="card-chevron">›</span>
           </div>
           ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
@@ -346,7 +346,7 @@ function renderTimeline(day, items) {
     if (!card) return;
     if (card.dataset.bookingId) {
       const b = bookings.find(x => x.id === card.dataset.bookingId);
-      if (b) openModal(b);
+      if (b) openBookingDetail(b);
     } else if (card.dataset.day) {
       openPlaceModal(card.dataset.day, parseInt(card.dataset.index));
     }
@@ -738,6 +738,51 @@ async function saveBooking() {
   });
   renderDay(currentDay);
   showToast(editingId ? "Updated ✓" : "Added ✓");
+}
+
+// === Booking Detail (inline timeline cards) ===
+function openBookingDetail(b) {
+  // Reuse place modal but fill with booking data
+  currentPlaceDetail = null; // not an itinerary item
+
+  document.getElementById("place-modal-title").textContent = b.place;
+
+  const metaEl = document.getElementById("place-modal-meta");
+  metaEl.innerHTML = `
+    ${b.time ? `<span class="place-tag">${b.time}</span>` : ""}
+    ${b.reservation ? `<span class="place-tag confirmed">預約 ${b.reservation}</span>` : ""}
+    ${b.confirmation ? `<span class="place-tag"># ${b.confirmation}</span>` : ""}
+    <span class="place-tag type-tag">${TYPE_ICONS[b.type] || '📌'}</span>
+  `;
+
+  const mapsUrl = b.mapsUrl || `https://maps.google.com/?q=${encodeURIComponent(b.place + ', Bali')}`;
+  const mapsBtn = document.getElementById("place-maps-btn");
+  mapsBtn.href = mapsUrl;
+  mapsBtn.style.display = "flex";
+
+  document.getElementById("place-reservation-time").value = b.reservation || "";
+  document.getElementById("place-maps-input").value = b.mapsUrl || "";
+  document.getElementById("place-notes").value = b.notes || "";
+
+  // Hide visited/tentative actions, show edit instead
+  document.getElementById("place-visited-btn").style.display = "none";
+  document.getElementById("place-tentative-actions").style.display = "none";
+  document.getElementById("place-manage-actions").style.display = "none";
+
+  // Override save to update booking
+  document.getElementById("place-save-btn").onclick = async () => {
+    b.reservation = document.getElementById("place-reservation-time").value.trim();
+    b.mapsUrl = document.getElementById("place-maps-input").value.trim();
+    b.notes = document.getElementById("place-notes").value.trim();
+    const idx = bookings.findIndex(x => x.id === b.id);
+    if (idx !== -1) bookings[idx] = b;
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("Updated ✓");
+  };
+
+  document.getElementById("place-modal-overlay").classList.add("open");
 }
 
 // === Helpers ===
