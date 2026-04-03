@@ -399,6 +399,12 @@ function setupPlaceModal() {
           <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
         </div>
       </div>
+      <div id="place-manage-actions" style="display:none;margin-bottom:12px;">
+        <div class="tentative-btns">
+          <button type="button" class="btn-visited" id="place-set-tentative-btn">❓ 改為待定</button>
+          <button type="button" class="btn-remove-plan" id="place-remove-confirmed-btn">× 移除行程</button>
+        </div>
+      </div>
       <div class="form-actions">
         <button type="button" class="btn-visited" id="place-visited-btn">✓ 標記去過</button>
         <button type="button" class="btn-primary" id="place-save-btn">儲存</button>
@@ -430,13 +436,12 @@ function setupPlaceModal() {
     const { day, index } = currentPlaceDetail;
     const item = ITINERARY[day]?.items[index];
     if (!item) return;
-    // Mark as confirmed (remove tentative)
     item.tentative = false;
     visited[`${day}-${index}_confirmed`] = true;
     await saveBookings();
     closePlaceModal();
     renderDay(currentDay);
-    showToast("Already added to the itinerary ✓");
+    showToast("Added to itinerary ✓");
   };
 
   document.getElementById("place-remove-btn").onclick = async () => {
@@ -444,7 +449,31 @@ function setupPlaceModal() {
     const { day, index } = currentPlaceDetail;
     const item = ITINERARY[day]?.items[index];
     if (!item) return;
+    item._removed = true;
     item.tentative = false;
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("Removed from itinerary 🗑️");
+  };
+
+  document.getElementById("place-set-tentative-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const item = ITINERARY[day]?.items[index];
+    if (!item) return;
+    item.tentative = true;
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("Marked as tentative ❓");
+  };
+
+  document.getElementById("place-remove-confirmed-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const item = ITINERARY[day]?.items[index];
+    if (!item) return;
     item._removed = true;
     await saveBookings();
     closePlaceModal();
@@ -513,6 +542,9 @@ function openPlaceModal(day, index) {
 
   const tentativeActions = document.getElementById("place-tentative-actions");
   tentativeActions.style.display = isTentativeItem ? "block" : "none";
+
+  const manageActions = document.getElementById("place-manage-actions");
+  manageActions.style.display = (!isTentativeItem && !item._removed) ? "block" : "none";
 
   document.getElementById("place-modal-overlay").classList.add("open");
   setTimeout(() => document.getElementById("place-reservation-time").focus(), 350);
