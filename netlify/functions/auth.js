@@ -1,6 +1,37 @@
 // Netlify Function: /api/auth
 // Verifies Google ID token and checks approval status
 
+const nodemailer = require('nodemailer');
+
+async function sendApprovalEmail(toEmail, toName) {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) return;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user, pass }
+  });
+
+  await transporter.sendMail({
+    from: `"Yvette" <${user}>`,
+    to: toEmail,
+    subject: '🌴 Bali for Rebuilding — 你已獲得存取權限！',
+    html: `
+      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;">
+        <h2 style="font-size:22px;margin-bottom:8px;">🌴 歡迎加入！</h2>
+        <p style="color:#555;line-height:1.6;">嗨 ${toName || toEmail}，<br/><br/>
+        你已獲准存取 <strong>Bali for Rebuilding</strong> 行程網頁 🎉</p>
+        <a href="https://bali-for-rebuilding.netlify.app" 
+           style="display:inline-block;margin-top:24px;padding:12px 24px;background:#1a6fd4;color:white;border-radius:10px;text-decoration:none;font-weight:600;">
+          開啟行程網頁
+        </a>
+        <p style="margin-top:24px;color:#aaa;font-size:12px;">Apr 11–15, 2026 · Bali</p>
+      </div>
+    `
+  });
+}
+
 const AUTH_GIST_ID = process.env.AUTH_GIST_ID;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "y19990828@gmail.com";
@@ -95,10 +126,13 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: "Not authorized" }) };
     }
     const targetEmail = body.targetEmail;
+    const targetUser = authData.pending.find(p => p.email === targetEmail);
     authData.pending = authData.pending.filter(p => p.email !== targetEmail);
     authData.rejected = authData.rejected.filter(e => e !== targetEmail);
     if (!authData.approved.includes(targetEmail)) authData.approved.push(targetEmail);
     await saveAuthData(authData);
+    // Send approval email
+    try { await sendApprovalEmail(targetEmail, targetUser?.name || targetEmail); } catch(e) { console.error('Email failed:', e.message); }
     return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
   }
 
