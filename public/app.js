@@ -94,6 +94,7 @@ const TYPE_ICONS = {
 let bookings = [];
 let placeNotes = {}; // { "day-index": { reservationTime, notes } }
 let visited = {}; // { "day-index": true }
+let selectedStatus = "confirmed";
 let currentDay = "1";
 let editingId = null;
 let selectedType = "restaurant";
@@ -306,13 +307,17 @@ function renderBookings(day) {
   }
 
   dayBookings.forEach(b => {
+    const isTentativeBooking = b.status === "tentative";
     const item = document.createElement("div");
-    item.className = "booking-item";
+    item.className = `booking-item${isTentativeBooking ? " booking-tentative" : ""}`;
     item.onclick = () => openModal(b);
     item.innerHTML = `
       <div class="booking-icon">${TYPE_ICONS[b.type] || "📌"}</div>
       <div class="booking-info">
-        <div class="booking-name">${b.place}</div>
+        <div class="booking-name">
+          ${b.place}
+          ${isTentativeBooking ? '<span class="tentative-badge">❓ 待定</span>' : ''}
+        </div>
         <div class="booking-meta">
           ${b.time ? `<span class="booking-tag">${b.time}</span>` : ""}
           ${b.reservation ? `<span class="booking-tag confirmed">預約 ${b.reservation}</span>` : ""}
@@ -538,11 +543,19 @@ function setupModal() {
   };
 
   document.getElementById("type-chips").addEventListener("click", e => {
-    const chip = e.target.closest(".chip");
+    const chip = e.target.closest(".chip[data-type]");
     if (!chip) return;
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    document.querySelectorAll(".chip[data-type]").forEach(c => c.classList.remove("active"));
     chip.classList.add("active");
     selectedType = chip.dataset.type;
+  });
+
+  document.getElementById("status-chips").addEventListener("click", e => {
+    const chip = e.target.closest(".status-chip");
+    if (!chip) return;
+    document.querySelectorAll(".status-chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    selectedStatus = chip.dataset.status;
   });
 
   document.getElementById("booking-form").onsubmit = async e => {
@@ -576,8 +589,13 @@ function openModal(booking = null) {
   document.getElementById("form-notes").value = booking?.notes || "";
 
   selectedType = booking?.type || "restaurant";
-  document.querySelectorAll(".chip").forEach(c => {
+  document.querySelectorAll(".chip[data-type]").forEach(c => {
     c.classList.toggle("active", c.dataset.type === selectedType);
+  });
+
+  selectedStatus = booking?.status || "confirmed";
+  document.querySelectorAll(".status-chip").forEach(c => {
+    c.classList.toggle("active", c.dataset.status === selectedStatus);
   });
 
   document.getElementById("modal-overlay").classList.add("open");
@@ -596,6 +614,7 @@ async function saveBooking() {
     day: document.getElementById("form-day").value,
     time: document.getElementById("form-time").value,
     type: selectedType,
+    status: selectedStatus,
     reservation: document.getElementById("form-reservation").value.trim(),
     confirmation: document.getElementById("form-confirmation").value.trim(),
     mapsUrl: document.getElementById("form-maps-url").value.trim(),

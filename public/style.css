@@ -458,6 +458,12 @@ body {
   transform: scale(0.98);
 }
 
+.booking-item.booking-tentative {
+  background: rgba(200,200,210,0.2);
+  border: 1.5px dashed rgba(150,150,170,0.4);
+  opacity: 0.8;
+}
+
 .booking-icon {
   font-size: 20px;
   flex-shrink: 0;
