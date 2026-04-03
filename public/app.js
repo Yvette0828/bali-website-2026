@@ -245,7 +245,7 @@ function renderTimeline(day, items) {
 
   items.forEach((item, i) => {
     if (item._removed) return; // skip removed tentative items
-    const key = `${day}-${i}`;
+    const key = `${day}-${slugKey(item.name)}`;
     const saved = placeNotes[key] || {};
     const hasNote = saved.reservationTime || saved.notes;
     const isVisited = !!visited[key];
@@ -420,7 +420,8 @@ function setupPlaceModal() {
   document.getElementById("place-save-btn").onclick = async () => {
     if (!currentPlaceDetail) return;
     const { day, index } = currentPlaceDetail;
-    const key = `${day}-${index}`;
+    const item = ITINERARY[day]?.items[index];
+    const key = `${day}-${slugKey(item?.name || index)}`;
     placeNotes[key] = {
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
       mapsUrl: document.getElementById("place-maps-input").value.trim(),
@@ -438,7 +439,7 @@ function setupPlaceModal() {
     const item = ITINERARY[day]?.items[index];
     if (!item) return;
     item.tentative = false;
-    visited[`${day}-${index}_confirmed`] = true;
+    visited[`${day}-${slugKey(item.name)}_confirmed`] = true;
     await saveBookings();
     closePlaceModal();
     renderDay(currentDay);
@@ -485,7 +486,8 @@ function setupPlaceModal() {
   document.getElementById("place-visited-btn").onclick = async () => {
     if (!currentPlaceDetail) return;
     const { day, index } = currentPlaceDetail;
-    const key = `${day}-${index}`;
+    const item2 = ITINERARY[day]?.items[index];
+    const key = `${day}-${slugKey(item2?.name || index)}`;
     const wasVisited = !!visited[key];
     if (wasVisited) {
       delete visited[key];
@@ -504,7 +506,7 @@ function openPlaceModal(day, index) {
   if (!item) return;
   currentPlaceDetail = { day, index };
 
-  const key = `${day}-${index}`;
+  const key = `${day}-${slugKey(item.name)}`;
   const saved = placeNotes[key] || {};
 
   document.getElementById("place-modal-title").textContent = item.name;
@@ -533,7 +535,7 @@ function openPlaceModal(day, index) {
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
-  const key2 = `${day}-${index}`;
+  const key2 = `${day}-${slugKey(item.name)}`;
   const isVisited = !!visited[key2];
   const isTentativeItem = !!item.tentative;
   const visitedBtn = document.getElementById("place-visited-btn");
@@ -671,6 +673,11 @@ async function saveBooking() {
   });
   renderDay(currentDay);
   showToast(editingId ? "已更新 ✓" : "已新增 ✓");
+}
+
+// === Helpers ===
+function slugKey(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9一-鿿]+/g, '-').replace(/^-|-$/g, '');
 }
 
 // === Toast ===
