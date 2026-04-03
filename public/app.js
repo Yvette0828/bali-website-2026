@@ -557,8 +557,9 @@ function closePlaceModal() {
 
 function openBackupPlace(index) {
   const item = ITINERARY.backup.items[index];
-  if (!item || !item.address) return;
-  window.open(`https://maps.google.com/?q=${encodeURIComponent(item.address)}`, "_blank");
+  if (!item) return;
+  const query = item.name + ", Bali";
+  window.open(`https://maps.google.com/?q=${encodeURIComponent(query)}`, "_blank");
 }
 
 function labelForType(type) {
