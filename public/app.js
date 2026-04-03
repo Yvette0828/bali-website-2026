@@ -8,13 +8,13 @@ const ITINERARY = {
     title: "抵達峇里島",
     subtitle: "長途飛行 → Canggu 安頓",
     items: [
-      { time: "07:00", name: "機場接送出發", type: "transport", duration: "自家 → 桃園機場", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
-      { time: "09:50", name: "TPE 桃園機場起飛", type: "transport", duration: "飛行 ~5h", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
-      { time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
-      { time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
-      { time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Pantai Berawa No.7, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "19:35", name: "Santanera", type: "activity", duration: "~1h", address: "Jl. Pantai Berawa, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "21:08", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { id: "d1-pickup", time: "07:00", name: "機場接送出發", type: "transport", duration: "自家 → 桃園機場", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { id: "d1-tpe-depart", time: "09:50", name: "TPE 桃園機場起飛", type: "transport", duration: "飛行 ~5h", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { id: "d1-dps-arrive", time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
+      { id: "d1-indigo", time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { id: "d1-osteria", time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Pantai Berawa No.7, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d1-santanera", time: "19:35", name: "Santanera", type: "activity", duration: "~1h", address: "Jl. Pantai Berawa, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d1-indigo-sleep", time: "21:08", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
     ]
   },
   2: {
@@ -22,15 +22,15 @@ const ITINERARY = {
     title: "Canggu 漫遊",
     subtitle: "早午餐、Spa、海灘夕陽",
     items: [
-      { time: "08:00", name: "英迪格酒店", type: "hotel", duration: "出發", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
-      { time: "08:37", name: "Milk & Madu Beach Road", type: "restaurant", duration: "早餐 ~1h", address: "Jl. Pantai Batu Mejan, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "09:40", name: "Gigi Susu", type: "activity", duration: "~1h", address: "Canggu, Kuta Utara, Badung Regency, Bali, Indonesia" },
-      { time: "10:35", name: "Sensatia – Batu Bolong Canggu", type: "activity", duration: "~1h", address: "Jl. Batu Bolong No.56, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "11:38", name: "La Brisa Sunday Market", type: "activity", duration: "~2.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "頌缽課程 ~3h", address: "Jl. Pantai Batu Bolong No.97, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "17:42", name: "La Brisa Bali | Beach Club", type: "activity", duration: "夕陽 ~1.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "19:11", name: "Naughty Nuri's Warung Seminyak", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Raya Petitenget No.17, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "20:26", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { id: "d2-indigo", time: "08:00", name: "英迪格酒店", type: "hotel", duration: "出發", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { id: "d2-milk-madu", time: "08:37", name: "Milk & Madu Beach Road", type: "restaurant", duration: "早餐 ~1h", address: "Jl. Pantai Batu Mejan, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-gigi-susu", time: "09:40", name: "Gigi Susu", type: "activity", duration: "~1h", address: "Canggu, Kuta Utara, Badung Regency, Bali, Indonesia" },
+      { id: "d2-sensatia", time: "10:35", name: "Sensatia – Batu Bolong Canggu", type: "activity", duration: "~1h", address: "Jl. Batu Bolong No.56, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-labrisa-market", time: "11:38", name: "La Brisa Sunday Market", type: "activity", duration: "~2.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-udara", time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "頌缽課程 ~3h", address: "Jl. Pantai Batu Bolong No.97, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-labrisa-club", time: "17:42", name: "La Brisa Bali | Beach Club", type: "activity", duration: "夕陽 ~1.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-naughty-nuris", time: "19:11", name: "Naughty Nuri's Warung Seminyak", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Raya Petitenget No.17, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d2-indigo-sleep", time: "20:26", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
     ]
   },
   3: {
@@ -38,15 +38,15 @@ const ITINERARY = {
     title: "前往烏布",
     subtitle: "猴子森林、皇宮、聖河",
     items: [
-      { time: "08:00", name: "英迪格酒店 Check-out", type: "hotel", duration: "出發烏布", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
-      { time: "09:15", name: "Sisterfields", type: "restaurant", duration: "早午餐 ~1.5h", address: "Jl. Subak Sari No.20, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "11:00", name: "ULU SPA Club", type: "activity", duration: "Spa ~1.5h", address: "Jl. Raya Uluwatu, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali" },
-      { time: "13:46", name: "Kurasu Ubud", type: "restaurant", duration: "咖啡 ~1h", address: "Jl. Raya Sanggingan, Lungsiakan, Kedewatan, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
-      { time: "14:58", name: "Sacred Monkey Forest Sanctuary", type: "activity", duration: "~1h", address: "Jl. Monkey Forest, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
-      { time: "16:05", name: "烏布皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud No.8, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
-      { time: "17:08", name: "烏布水皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
-      { time: "18:18", name: "Sayan Point", type: "restaurant", duration: "晚餐", address: "Jl. Raya Sayan, Sayan, Ubud, Kabupaten Gianyar, Bali" },
-      { time: "21:00", name: "Airbnb 烏布", type: "hotel", duration: "check-in", address: "Jalan Tirta Tawar Kutuh, 烏布德, 峇里島 80571, 印尼" },
+      { id: "d3-indigo-checkout", time: "08:00", name: "英迪格酒店 Check-out", type: "hotel", duration: "出發烏布", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
+      { id: "d3-sisterfields", time: "09:15", name: "Sisterfields", type: "restaurant", duration: "早午餐 ~1.5h", address: "Jl. Subak Sari No.20, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { id: "d3-ulu-spa", time: "11:00", name: "ULU SPA Club", type: "activity", duration: "Spa ~1.5h", address: "Jl. Raya Uluwatu, Jimbaran, Kec. Kuta Sel., Kabupaten Badung, Bali" },
+      { id: "d3-kurasu", time: "13:46", name: "Kurasu Ubud", type: "restaurant", duration: "咖啡 ~1h", address: "Jl. Raya Sanggingan, Lungsiakan, Kedewatan, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
+      { id: "d3-monkey-forest", time: "14:58", name: "Sacred Monkey Forest Sanctuary", type: "activity", duration: "~1h", address: "Jl. Monkey Forest, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
+      { id: "d3-ubud-palace", time: "16:05", name: "烏布皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud No.8, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571" },
+      { id: "d3-water-palace", time: "17:08", name: "烏布水皇宮", type: "activity", duration: "~1h", address: "Jl. Raya Ubud, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali" },
+      { id: "d3-sayan-point", time: "18:18", name: "Sayan Point", type: "restaurant", duration: "晚餐", address: "Jl. Raya Sayan, Sayan, Ubud, Kabupaten Gianyar, Bali" },
+      { id: "d3-airbnb", time: "21:00", name: "Airbnb 烏布", type: "hotel", duration: "check-in", address: "Jalan Tirta Tawar Kutuh, 烏布德, 峇里島 80571, 印尼" },
     ]
   },
   4: {
@@ -54,13 +54,13 @@ const ITINERARY = {
     title: "火山日出 & 梯田",
     subtitle: "凌晨出發、巴杜爾火山、德哥拉朗",
     items: [
-      { time: "03:00", name: "巴杜爾火山日出健行", type: "activity", duration: "~5h", address: "Mount Batur, Kintamani, Bangli Regency, Bali, Indonesia" },
-      { time: "08:56", name: "Tis Cafe", type: "restaurant", duration: "早餐 ~1.5h", address: "Jl. Raya Penelokan, Batur, Kintamani, Bangli Regency, Bali" },
-      { time: "10:28", name: "德哥拉朗梯田", type: "activity", duration: "~1h", address: "Tegallalang Rice Terrace, Tegallalang, Gianyar Regency, Bali" },
-      { time: "12:02", name: "The Garcia Ubud", type: "hotel", duration: "check-in", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
-      { time: "13:41", name: "聖泉寺", type: "activity", duration: "~1h", address: "Pura Tirta Empul, Jl. Tirta, Manukaya, Kec. Tampaksiring, Kabupaten Gianyar, Bali" },
-      { time: "15:21", name: "The Garcia Ubud", type: "hotel", duration: "休息", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
-      { time: "16:00", name: "Afternoon Yoga @ The Garcia Ubud", type: "activity", duration: "~1h · 16:00–17:00", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali", tentative: true },
+      { id: "d4-batur", time: "03:00", name: "巴杜爾火山日出健行", type: "activity", duration: "~5h", address: "Mount Batur, Kintamani, Bangli Regency, Bali, Indonesia" },
+      { id: "d4-tis-cafe", time: "08:56", name: "Tis Cafe", type: "restaurant", duration: "早餐 ~1.5h", address: "Jl. Raya Penelokan, Batur, Kintamani, Bangli Regency, Bali" },
+      { id: "d4-tegallalang", time: "10:28", name: "德哥拉朗梯田", type: "activity", duration: "~1h", address: "Tegallalang Rice Terrace, Tegallalang, Gianyar Regency, Bali" },
+      { id: "d4-garcia-checkin", time: "12:02", name: "The Garcia Ubud", type: "hotel", duration: "check-in", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { id: "d4-tirta-empul", time: "13:41", name: "聖泉寺", type: "activity", duration: "~1h", address: "Pura Tirta Empul, Jl. Tirta, Manukaya, Kec. Tampaksiring, Kabupaten Gianyar, Bali" },
+      { id: "d4-garcia-rest", time: "15:21", name: "The Garcia Ubud", type: "hotel", duration: "休息", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { id: "d4-afternoon-yoga", time: "16:00", name: "Afternoon Yoga @ The Garcia Ubud", type: "activity", duration: "~1h · 16:00–17:00", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali", tentative: true },
     ]
   },
   5: {
@@ -68,9 +68,9 @@ const ITINERARY = {
     title: "返回台灣",
     subtitle: "烏布 → 機場 → 台北",
     items: [
-      { time: "07:00", name: "Morning Yoga @ The Garcia Ubud", type: "activity", duration: "飯店晨間瑜伽", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
-      { time: "13:30", name: "DPS 伍拉賴機場", type: "transport", duration: "~3h 候機", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
-      { time: "22:00", name: "TPE 桃園機場抵達", type: "transport", duration: "回到台灣 🎉", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { id: "d5-morning-yoga", time: "07:00", name: "Morning Yoga @ The Garcia Ubud", type: "activity", duration: "飯店晨間瑜伽", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { id: "d5-dps-depart", time: "13:30", name: "DPS 伍拉賴機場", type: "transport", duration: "~3h 候機", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
+      { id: "d5-tpe-arrive", time: "22:00", name: "TPE 桃園機場抵達", type: "transport", duration: "回到台灣 🎉", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
     ]
   },
   backup: {
@@ -245,7 +245,7 @@ function renderTimeline(day, items) {
 
   items.forEach((item, i) => {
     if (item._removed) return; // skip removed tentative items
-    const key = `${day}-${slugKey(item.name)}`;
+    const key = `${day}-${slugKey(item)}`;
     const saved = placeNotes[key] || {};
     const hasNote = saved.reservationTime || saved.notes;
     const isVisited = !!visited[key];
@@ -421,7 +421,7 @@ function setupPlaceModal() {
     if (!currentPlaceDetail) return;
     const { day, index } = currentPlaceDetail;
     const item = ITINERARY[day]?.items[index];
-    const key = `${day}-${slugKey(item?.name || index)}`;
+    const key = `${day}-${slugKey(item || index)}`;
     placeNotes[key] = {
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
       mapsUrl: document.getElementById("place-maps-input").value.trim(),
@@ -439,7 +439,7 @@ function setupPlaceModal() {
     const item = ITINERARY[day]?.items[index];
     if (!item) return;
     item.tentative = false;
-    visited[`${day}-${slugKey(item.name)}_confirmed`] = true;
+    visited[`${day}-${slugKey(item)}_confirmed`] = true;
     await saveBookings();
     closePlaceModal();
     renderDay(currentDay);
@@ -506,7 +506,7 @@ function openPlaceModal(day, index) {
   if (!item) return;
   currentPlaceDetail = { day, index };
 
-  const key = `${day}-${slugKey(item.name)}`;
+  const key = `${day}-${slugKey(item)}`;
   const saved = placeNotes[key] || {};
 
   document.getElementById("place-modal-title").textContent = item.name;
@@ -535,7 +535,7 @@ function openPlaceModal(day, index) {
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
-  const key2 = `${day}-${slugKey(item.name)}`;
+  const key2 = `${day}-${slugKey(item)}`;
   const isVisited = !!visited[key2];
   const isTentativeItem = !!item.tentative;
   const visitedBtn = document.getElementById("place-visited-btn");
@@ -676,8 +676,11 @@ async function saveBooking() {
 }
 
 // === Helpers ===
-function slugKey(name) {
-  return String(name).toLowerCase().replace(/[^a-z0-9一-鿿]+/g, '-').replace(/^-|-$/g, '');
+function slugKey(item) {
+  // Prefer stable id; fall back to name-based slug
+  if (typeof item === 'object' && item.id) return item.id;
+  const name = typeof item === 'object' ? item.name : item;
+  return String(name).toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-').replace(/^-|-$/g, '');
 }
 
 // === Toast ===
