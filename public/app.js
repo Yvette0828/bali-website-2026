@@ -263,9 +263,9 @@ function renderMergedTimeline(day, itineraryItems) {
 
   renderTimeline(day, allItems);
 
-  // If no bookings, show add prompt at bottom
+  // Always show add button at bottom
   const el = document.getElementById(`timeline-${day}`);
-  if (el && dayBookings.length === 0) {
+  if (el) {
     const hint = document.createElement("div");
     hint.style.cssText = "padding:16px 0 4px;";
     hint.innerHTML = `<button class="btn-add-inline" onclick="openModal()">
