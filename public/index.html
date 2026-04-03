@@ -127,6 +127,42 @@
     </div>
   </div>
 
+  <!-- Auth overlay -->
+  <div id="auth-overlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(247,248,251,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;">
+    <div style="text-align:center;max-width:360px;width:100%;">
+      <div style="font-size:64px;margin-bottom:16px;">🌴</div>
+      <h1 style="font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;">Bali for Rebuilding</h1>
+      <p style="font-size:14px;color:#666;margin-bottom:32px;">Apr 11–15, 2026 · 私人行程網頁</p>
+      <div id="g_id_onload"
+        data-client_id="1034860792560-8dgtqhaphq9rm7g0orc54co7adli0t2o.apps.googleusercontent.com"
+        data-callback="handleGoogleLogin"
+        data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="signin_with"
+        data-shape="rectangular"
+        data-logo_alignment="left"
+        data-width="280">
+      </div>
+      <p id="auth-status" style="margin-top:20px;font-size:13px;color:#888;"></p>
+    </div>
+  </div>
+
+  <div id="pending-overlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(247,248,251,0.98);flex-direction:column;align-items:center;justify-content:center;padding:32px;">
+    <div style="text-align:center;max-width:360px;width:100%;">
+      <div style="font-size:64px;margin-bottom:16px;">⏳</div>
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;">等待審核</h2>
+      <p id="pending-msg" style="font-size:14px;color:#666;line-height:1.6;">你的申請已送出，等待管理者核准後即可查看行程。</p>
+      <button onclick="googleLogout()" style="margin-top:24px;padding:10px 20px;border:1px solid #ddd;border-radius:12px;background:white;font-size:13px;cursor:pointer;">登出</button>
+    </div>
+  </div>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async></script>
+  <script src="auth.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
