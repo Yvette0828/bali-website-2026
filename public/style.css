@@ -618,6 +618,78 @@ body {
   border-color: rgba(255,100,100,0.3);
 }
 
+/* Tentative card state */
+.timeline-card.tentative {
+  background: rgba(200,200,210,0.25);
+  border: 1.5px dashed rgba(150,150,170,0.4);
+  opacity: 0.75;
+}
+
+.tentative-dot {
+  background: #b0b0c0 !important;
+  box-shadow: none !important;
+}
+
+.tentative-time {
+  color: var(--text-tertiary);
+}
+
+.tentative-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(180,180,200,0.2);
+  color: #888;
+  border: 1px solid rgba(150,150,170,0.35);
+  border-radius: 8px;
+  padding: 1px 7px;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.tentative-modal-label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.tentative-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirm-plan {
+  flex: 1;
+  padding: 12px;
+  background: rgba(52,199,89,0.12);
+  color: #1b7a3e;
+  border: 1px solid rgba(52,199,89,0.3);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-confirm-plan:active { transform: scale(0.97); }
+
+.btn-remove-plan {
+  flex: 1;
+  padding: 12px;
+  background: rgba(255,69,58,0.08);
+  color: var(--danger);
+  border: 1px solid rgba(255,69,58,0.2);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-remove-plan:active { transform: scale(0.97); }
+
 /* Visited card state */
 .timeline-card.visited {
   opacity: 0.55;

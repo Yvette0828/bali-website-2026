@@ -59,6 +59,7 @@ const ITINERARY = {
       { time: "12:02", name: "The Garcia Ubud", type: "hotel", duration: "check-in", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
       { time: "13:41", name: "聖泉寺", type: "activity", duration: "~1h", address: "Pura Tirta Empul, Jl. Tirta, Manukaya, Kec. Tampaksiring, Kabupaten Gianyar, Bali" },
       { time: "15:21", name: "The Garcia Ubud", type: "hotel", duration: "休息", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali" },
+      { time: "16:00", name: "Afternoon Yoga @ The Garcia Ubud", type: "activity", duration: "~1h · 16:00–17:00", address: "Jl. Raya Tegallalang, Tegallalang, Kec. Tegallalang, Kabupaten Gianyar, Bali", tentative: true },
     ]
   },
   5: {
@@ -241,24 +242,27 @@ function renderTimeline(day, items) {
   if (!el) return;
 
   items.forEach((item, i) => {
+    if (item._removed) return; // skip removed tentative items
     const key = `${day}-${i}`;
     const saved = placeNotes[key] || {};
     const hasNote = saved.reservationTime || saved.notes;
     const isVisited = !!visited[key];
+    const isTentative = item.tentative && !visited[key + '_confirmed'];
 
     const wrapper = document.createElement("div");
     wrapper.className = "timeline-item";
 
     wrapper.innerHTML = `
       <div class="timeline-left">
-        <div class="timeline-time">${item.time || ""}</div>
-        <div class="timeline-dot ${isVisited ? 'visited' : ''}"></div>
+        <div class="timeline-time ${isTentative ? 'tentative-time' : ''}">${item.time || ""}</div>
+        <div class="timeline-dot ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative-dot' : ''}"></div>
         ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
       </div>
-      <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''}" data-day="${day}" data-index="${i}">
+      <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative' : ''}" data-day="${day}" data-index="${i}">
         <div class="card-name">
           <span class="card-type-dot"></span>
           <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
+          ${isTentative ? '<span class="tentative-badge">❓ 待定</span>' : ''}
           ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
           <span class="card-chevron">›</span>
         </div>
@@ -383,6 +387,13 @@ function setupPlaceModal() {
         <label>備註</label>
         <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
       </div>
+      <div id="place-tentative-actions" style="display:none;margin-bottom:12px;">
+        <p class="tentative-modal-label">❓ 這個行程還在待定中</p>
+        <div class="tentative-btns">
+          <button type="button" class="btn-confirm-plan" id="place-confirm-btn">✓ 正式加入</button>
+          <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
+        </div>
+      </div>
       <div class="form-actions">
         <button type="button" class="btn-visited" id="place-visited-btn">✓ 標記去過</button>
         <button type="button" class="btn-primary" id="place-save-btn">儲存</button>
@@ -407,6 +418,33 @@ function setupPlaceModal() {
     closePlaceModal();
     renderDay(currentDay);
     showToast("已儲存 ✓");
+  };
+
+  document.getElementById("place-confirm-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const item = ITINERARY[day]?.items[index];
+    if (!item) return;
+    // Mark as confirmed (remove tentative)
+    item.tentative = false;
+    visited[`${day}-${index}_confirmed`] = true;
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("Already added to the itinerary ✓");
+  };
+
+  document.getElementById("place-remove-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const item = ITINERARY[day]?.items[index];
+    if (!item) return;
+    item.tentative = false;
+    item._removed = true;
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast("Removed from itinerary 🗑️");
   };
 
   document.getElementById("place-visited-btn").onclick = async () => {
@@ -462,9 +500,14 @@ function openPlaceModal(day, index) {
 
   const key2 = `${day}-${index}`;
   const isVisited = !!visited[key2];
+  const isTentativeItem = !!item.tentative;
   const visitedBtn = document.getElementById("place-visited-btn");
-  visitedBtn.textContent = isVisited ? "↩ 取消去過" : "✓ 標記去過";
+  visitedBtn.textContent = isVisited ? "↩ Cancel visited" : "✓ Mark as visited";
   visitedBtn.classList.toggle("btn-visited-active", isVisited);
+  visitedBtn.style.display = isTentativeItem ? "none" : "";
+
+  const tentativeActions = document.getElementById("place-tentative-actions");
+  tentativeActions.style.display = isTentativeItem ? "block" : "none";
 
   document.getElementById("place-modal-overlay").classList.add("open");
   setTimeout(() => document.getElementById("place-reservation-time").focus(), 350);
