@@ -588,7 +588,7 @@ body {
 .btn-primary {
   flex: 1;
   padding: 14px;
-  background: var(--accent);
+  background: #1a6fd4;
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -597,7 +597,7 @@ body {
   cursor: pointer;
   font-family: inherit;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 16px var(--accent-glow);
+  box-shadow: 0 4px 16px rgba(26,111,212,0.3);
 }
 
 .btn-primary:active { transform: scale(0.97); }
