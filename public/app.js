@@ -427,11 +427,45 @@ function renderBackup(main) {
         </div>
       `).join("")}
     </div>
-    <div class="bookings-list" id="bookings-backup" style="margin-top:16px;"></div>
+    <div id="bookings-backup" style="margin-top:16px;"></div>
   `;
 
   main.appendChild(section);
-  renderBookings("backup");
+  renderBackupBookings();
+}
+
+function renderBackupBookings() {
+  const el = document.getElementById("bookings-backup");
+  if (!el) return;
+  const dayBookings = bookings.filter(b => String(b.day) === "backup");
+
+  el.innerHTML = "";
+  dayBookings.forEach(b => {
+    const isTentativeBooking = b.status === "tentative";
+    const item = document.createElement("div");
+    item.className = `booking-item${isTentativeBooking ? " booking-tentative" : ""}`;
+    item.onclick = () => openBookingDetail(b);
+    item.innerHTML = `
+      <div class="booking-icon">${TYPE_ICONS[b.type] || "📌"}</div>
+      <div class="booking-info">
+        <div class="booking-name">${b.place}${isTentativeBooking ? ' <span class="tentative-badge">❓ 待定</span>' : ""}</div>
+        <div class="booking-meta">
+          ${b.time ? `<span class="booking-tag">${b.time}</span>` : ""}
+          ${b.notes ? `<span class="booking-tag">${b.notes.substring(0,30)}</span>` : ""}
+        </div>
+      </div>
+    `;
+    el.appendChild(item);
+  });
+
+  // Always show add button
+  const hint = document.createElement("div");
+  hint.style.cssText = "padding:12px 0 4px;";
+  hint.innerHTML = `<button class="btn-add-inline" onclick="openModal()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    新增景點
+  </button>`;
+  el.appendChild(hint);
 }
 
 // === Place Detail Modal ===
@@ -731,7 +765,7 @@ function openModal(booking = null) {
   editingId = booking?.id || null;
   const isEdit = !!booking;
 
-  document.getElementById("modal-title").textContent = isEdit ? "編輯預訂" : "新增預訂";
+  document.getElementById("modal-title").textContent = isEdit ? "編輯行程" : "新增行程";
   document.getElementById("btn-delete").style.display = isEdit ? "block" : "none";
   document.getElementById("form-id").value = booking?.id || "";
   document.getElementById("form-place").value = booking?.place || "";
