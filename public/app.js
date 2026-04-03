@@ -376,6 +376,10 @@ function setupPlaceModal() {
         <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
       </div>
       <div class="form-group">
+        <label>Google Maps 連結（可覆蓋預設搜尋）</label>
+        <input type="url" id="place-maps-input" placeholder="貼入 Google Maps 分享連結" />
+      </div>
+      <div class="form-group">
         <label>備註</label>
         <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
       </div>
@@ -396,6 +400,7 @@ function setupPlaceModal() {
     const key = `${day}-${index}`;
     placeNotes[key] = {
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
+      mapsUrl: document.getElementById("place-maps-input").value.trim(),
       notes: document.getElementById("place-notes").value.trim(),
     };
     await saveBookings();
@@ -440,17 +445,19 @@ function openPlaceModal(day, index) {
     ${item.address ? `<div class="place-address">📍 ${item.address}</div>` : ""}
   `;
 
-  // Google Maps link
+  // Google Maps link — prefer user-saved URL, then name search
   const mapsBtn = document.getElementById("place-maps-btn");
-  if (item.address) {
-    mapsBtn.href = `https://maps.google.com/?q=${encodeURIComponent(item.address)}`;
-    mapsBtn.style.display = "flex";
+  const savedMapsUrl = saved.mapsUrl;
+  if (savedMapsUrl) {
+    mapsBtn.href = savedMapsUrl;
   } else {
-    mapsBtn.href = `https://maps.google.com/?q=${encodeURIComponent(item.name + " Bali")}`;
-    mapsBtn.style.display = "flex";
+    // Use name + Bali for search (more accurate than raw address)
+    mapsBtn.href = `https://maps.google.com/?q=${encodeURIComponent(item.name + ", Bali")}`;
   }
+  mapsBtn.style.display = "flex";
 
   document.getElementById("place-reservation-time").value = saved.reservationTime || "";
+  document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
   const key2 = `${day}-${index}`;
@@ -522,6 +529,7 @@ function openModal(booking = null) {
   document.getElementById("form-time").value = booking?.time || "";
   document.getElementById("form-reservation").value = booking?.reservation || "";
   document.getElementById("form-confirmation").value = booking?.confirmation || "";
+  document.getElementById("form-maps-url").value = booking?.mapsUrl || "";
   document.getElementById("form-notes").value = booking?.notes || "";
 
   selectedType = booking?.type || "restaurant";
@@ -547,6 +555,7 @@ async function saveBooking() {
     type: selectedType,
     reservation: document.getElementById("form-reservation").value.trim(),
     confirmation: document.getElementById("form-confirmation").value.trim(),
+    mapsUrl: document.getElementById("form-maps-url").value.trim(),
     notes: document.getElementById("form-notes").value.trim(),
   };
 
