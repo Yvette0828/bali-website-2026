@@ -461,7 +461,7 @@ function renderBackupBookings() {
   // Always show add button
   const hint = document.createElement("div");
   hint.style.cssText = "padding:12px 0 4px;";
-  hint.innerHTML = `<button class="btn-add-inline" onclick="openModal()">
+  hint.innerHTML = `<button class="btn-add-inline" onclick="openModalForBackup()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     新增景點
   </button>`;
@@ -722,6 +722,10 @@ function labelForType(type) {
   return map[type] || type;
 }
 
+function openModalForBackup() {
+  openModal(null, true);
+}
+
 // === Booking Modal ===
 function setupModal() {
   document.getElementById("btn-add").onclick = () => openModal();
@@ -761,15 +765,15 @@ function setupModal() {
   };
 }
 
-function openModal(booking = null) {
+function openModal(booking = null, isBackupMode = false) {
   editingId = booking?.id || null;
   const isEdit = !!booking;
 
-  document.getElementById("modal-title").textContent = isEdit ? "編輯行程" : "新增行程";
+  document.getElementById("modal-title").textContent = isEdit ? "編輯行程" : (isBackupMode ? "新增備案景點" : "新增行程");
   document.getElementById("btn-delete").style.display = isEdit ? "block" : "none";
   document.getElementById("form-id").value = booking?.id || "";
   document.getElementById("form-place").value = booking?.place || "";
-  document.getElementById("form-day").value = booking?.day || currentDay;
+  document.getElementById("form-day").value = booking?.day || (isBackupMode ? "backup" : currentDay);
   document.getElementById("form-time").value = booking?.time || "";
   document.getElementById("form-reservation").value = booking?.reservation || "";
   document.getElementById("form-confirmation").value = booking?.confirmation || "";
