@@ -8,7 +8,8 @@ const ITINERARY = {
     title: "抵達峇里島",
     subtitle: "長途飛行 → Canggu 安頓",
     items: [
-      { time: "06:50", name: "TPE 桃園機場出發", type: "transport", duration: "飛行 ~5.5h", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { time: "07:00", name: "機場接送出發", type: "transport", duration: "自家 → 桃園機場", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
+      { time: "09:50", name: "TPE 桃園機場起飛", type: "transport", duration: "飛行 ~5h", address: "臺灣桃園國際機場, 大園區, 桃園市, 台灣" },
       { time: "15:15", name: "DPS 伍拉賴機場抵達", type: "transport", duration: "入境 ~1h", address: "Ngurah Rai International Airport, Badung, Bali, Indonesia" },
       { time: "16:47", name: "峇里島水明漾海灘英迪格酒店", type: "hotel", duration: "check-in", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
       { time: "18:15", name: "L'Osteria Pizza e Cucina Canggu", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Pantai Berawa No.7, Tibubeneng, Kec. Kuta Utara, Kabupaten Badung, Bali" },
