@@ -3,28 +3,28 @@
    =========================== */
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: rgba(255,255,255,0.06);
-  --bg-card: rgba(255,255,255,0.08);
-  --bg-card-hover: rgba(255,255,255,0.12);
-  --border: rgba(255,255,255,0.12);
-  --border-light: rgba(255,255,255,0.06);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255,255,255,0.6);
-  --text-tertiary: rgba(255,255,255,0.35);
-  --accent: #2979ff;
-  --accent-light: rgba(41,121,255,0.2);
-  --accent-glow: rgba(41,121,255,0.4);
-  --success: #34c759;
+  --bg-primary: #f7f8fb;
+  --bg-secondary: rgba(255,255,255,0.85);
+  --bg-card: rgba(255,255,255,0.95);
+  --bg-card-hover: rgba(245,246,250,0.95);
+  --border: rgba(16,24,32,0.06);
+  --border-light: rgba(16,24,32,0.03);
+  --text-primary: #0b1220;
+  --text-secondary: rgba(11,18,32,0.6);
+  --text-tertiary: rgba(11,18,32,0.35);
+  --accent: #2b6ef6;
+  --accent-light: rgba(43,110,246,0.12);
+  --accent-glow: rgba(43,110,246,0.18);
+  --success: #059669;
   --warning: #ff9f0a;
-  --danger: #ff453a;
+  --danger: #e53935;
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 22px;
   --radius-xl: 30px;
-  --blur: blur(40px) saturate(180%);
-  --shadow: 0 8px 32px rgba(0,0,0,0.4);
-  --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+  --blur: blur(36px) saturate(120%);
+  --shadow: 0 8px 24px rgba(16,24,32,0.08);
+  --shadow-sm: 0 2px 8px rgba(16,24,32,0.06);
 }
 
 * {
@@ -53,11 +53,12 @@ body {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(41,121,255,0.25) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(100,200,150,0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 60% 30%, rgba(255,100,150,0.1) 0%, transparent 70%);
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(43,110,246,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(100,200,150,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 60% 30%, rgba(255,100,150,0.03) 0%, transparent 70%);
   pointer-events: none;
 }
+
 
 /* Header */
 .app-header {
@@ -109,7 +110,7 @@ body {
   padding: 12px 20px;
   overflow-x: auto;
   scrollbar-width: none;
-  background: rgba(10,10,15,0.5);
+  background: rgba(255,255,255,0.6);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border-bottom: 1px solid var(--border-light);
