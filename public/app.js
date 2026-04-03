@@ -291,9 +291,10 @@ function renderTimeline(day, items) {
     if (item._removed) return; // skip removed tentative items
     const isBooking = !!item._isBooking;
     const key = isBooking ? null : `${day}-${slugKey(item)}`;
+    const bookingVisitedKey = isBooking ? `booking-${item._booking?.id}` : null;
     const saved = key ? (placeNotes[key] || {}) : {};
     const hasNote = saved.reservationTime || saved.notes;
-    const isVisited = key ? !!visited[key] : false;
+    const isVisited = isBooking ? !!visited[bookingVisitedKey] : (key ? !!visited[key] : false);
     const isTentative = !isBooking && item.tentative && !visited[key + '_confirmed'];
     const isTentativeBooking = isBooking && item.status === 'tentative';
     const displayTime = isBooking ? (item.time || "") : (saved.overrideTime || item.time || "");
@@ -307,15 +308,16 @@ function renderTimeline(day, items) {
       const mapsUrl = b.mapsUrl || `https://maps.google.com/?q=${encodeURIComponent(b.place + ', Bali')}`;
       wrapper.innerHTML = `
         <div class="timeline-left">
-          <div class="timeline-time">${item.time || ""}</div>
-          <div class="timeline-dot"></div>
-          ${i < items.length - 1 ? '<div class="timeline-line"></div>' : ""}
+          <div class="timeline-time">${displayTime}</div>
+          <div class="timeline-dot ${isVisited ? 'visited' : ''}"></div>
+          ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
         </div>
-        <div class="timeline-card type-${item.type} ${isTentativeBooking ? 'tentative' : ''}" data-booking-id="${b.id}" data-maps-url="${mapsUrl}">
+        <div class="timeline-card type-${item.type} ${isTentativeBooking ? 'tentative' : ''} ${isVisited ? 'visited' : ''}" data-booking-id="${b.id}" data-maps-url="${mapsUrl}">
           <div class="card-name">
             <span class="card-type-dot"></span>
-            <span>${item.name}</span>
+            <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
             ${isTentativeBooking ? '<span class="tentative-badge">❓ 待定</span>' : ''}
+            ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
             <span class="card-chevron">›</span>
           </div>
           ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
@@ -778,14 +780,33 @@ function openBookingDetail(b) {
   document.getElementById("place-maps-input").value = b.mapsUrl || "";
   document.getElementById("place-notes").value = b.notes || "";
 
-  // Hide visited/tentative actions, show edit instead
-  document.getElementById("place-visited-btn").style.display = "none";
+  // Tentative/manage actions
   document.getElementById("place-tentative-actions").style.display = "none";
   document.getElementById("place-manage-actions").style.display = "none";
+
+  // Visited state for booking
+  const bookingVisitedKey = `booking-${b.id}`;
+  const isBookingVisited = !!visited[bookingVisitedKey];
+  const visitedBtn = document.getElementById("place-visited-btn");
+  visitedBtn.textContent = isBookingVisited ? "↩ Cancel visited" : "✓ Mark as visited";
+  visitedBtn.classList.toggle("btn-visited-active", isBookingVisited);
+  visitedBtn.style.display = "";
+  visitedBtn.onclick = async () => {
+    if (visited[bookingVisitedKey]) {
+      delete visited[bookingVisitedKey];
+    } else {
+      visited[bookingVisitedKey] = true;
+    }
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast(visited[bookingVisitedKey] === undefined ? "已取消標記" : "已打卡 ✓ 🌴");
+  };
 
   // Override save to update booking
   document.getElementById("place-save-btn").onclick = async () => {
     b.reservation = document.getElementById("place-reservation-time").value.trim();
+    b.time = document.getElementById("place-time-input").value.trim() || b.time;
     b.mapsUrl = document.getElementById("place-maps-input").value.trim();
     b.notes = document.getElementById("place-notes").value.trim();
     const idx = bookings.findIndex(x => x.id === b.id);
