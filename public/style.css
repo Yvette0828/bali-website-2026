@@ -12,9 +12,9 @@
   --text-primary: #0b1220;
   --text-secondary: rgba(11,18,32,0.6);
   --text-tertiary: rgba(11,18,32,0.35);
-  --accent: #2b6ef6;
-  --accent-light: rgba(43,110,246,0.12);
-  --accent-glow: rgba(43,110,246,0.18);
+  --accent: #89c4f4;
+  --accent-light: rgba(137,196,244,0.2);
+  --accent-glow: rgba(137,196,244,0.35);
   --success: #059669;
   --warning: #ff9f0a;
   --danger: #e53935;
@@ -67,8 +67,8 @@ body {
   z-index: 100;
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
-  background: rgba(10,10,15,0.7);
-  border-bottom: 1px solid var(--border-light);
+  background: rgba(255,255,255,0.92);
+  border-bottom: 1px solid var(--border);
   padding: env(safe-area-inset-top, 0) 0 0;
 }
 
