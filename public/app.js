@@ -479,13 +479,6 @@ function setupPlaceModal() {
         <label>備註</label>
         <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
       </div>
-      <div id="place-tentative-actions" style="display:none;margin-bottom:12px;">
-        <p class="tentative-modal-label">❓ 這個行程還在待定中</p>
-        <div class="tentative-btns">
-          <button type="button" class="btn-confirm-plan" id="place-confirm-btn">✓ 正式加入</button>
-          <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
-        </div>
-      </div>
       <div class="form-actions" style="flex-wrap:nowrap;gap:6px;margin-top:16px;">
         <button type="button" class="place-action-btn btn-visited" id="place-visited-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;">✓ 去過</button>
         <button type="button" class="place-action-btn btn-visited" id="place-set-tentative-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;display:none;">❓ 待定</button>
@@ -493,6 +486,7 @@ function setupPlaceModal() {
         <button type="button" class="place-action-btn btn-primary" id="place-save-btn" style="flex:1;font-size:12px;padding:10px 6px;">儲存</button>
       </div>
       <div id="place-tentative-actions" style="display:none;margin-top:8px;">
+        <p class="tentative-modal-label">❓ 這個行程還在待定中</p>
         <div class="tentative-btns">
           <button type="button" class="btn-confirm-plan" id="place-confirm-btn">✓ 正式加入</button>
           <button type="button" class="btn-remove-plan" id="place-remove-btn">× 移除行程</button>
