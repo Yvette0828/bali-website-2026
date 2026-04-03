@@ -446,7 +446,13 @@ function setupPlaceModal() {
   overlay.innerHTML = `
     <div class="modal" id="place-modal">
       <div class="modal-header">
-        <h2 id="place-modal-title">地點詳情</h2>
+        <div class="modal-title-wrap" id="modal-title-wrap">
+          <h2 id="place-modal-title" class="place-title-text">地點詳情</h2>
+          <button class="btn-edit-title" id="btn-edit-title" title="修改標題">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <input type="text" id="place-title-input" class="place-title-input" style="display:none;" />
+        </div>
         <button class="btn-icon" id="place-modal-close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -460,10 +466,6 @@ function setupPlaceModal() {
       <div class="form-group">
         <label>預約時間（可自行填寫）</label>
         <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
-      </div>
-      <div class="form-group">
-        <label>標題（可修改）</label>
-        <input type="text" id="place-name-input" placeholder="輸入自訂名稱" />
       </div>
       <div class="form-group">
         <label>時間（可修改）</label>
@@ -504,12 +506,36 @@ function setupPlaceModal() {
   document.getElementById("place-modal-close").onclick = closePlaceModal;
   overlay.onclick = e => { if (e.target === overlay) closePlaceModal(); };
 
+  // Inline title edit
+  document.getElementById("btn-edit-title").onclick = () => {
+    document.getElementById("place-modal-title").style.display = "none";
+    document.getElementById("btn-edit-title").style.display = "none";
+    const inp = document.getElementById("place-title-input");
+    inp.style.display = "";
+    inp.focus();
+    inp.select();
+  };
+  document.getElementById("place-title-input").onblur = () => {
+    const val = document.getElementById("place-title-input").value.trim();
+    if (val) document.getElementById("place-modal-title").textContent = val;
+    document.getElementById("place-modal-title").style.display = "";
+    document.getElementById("btn-edit-title").style.display = "";
+    document.getElementById("place-title-input").style.display = "none";
+  };
+  document.getElementById("place-title-input").onkeydown = e => {
+    if (e.key === "Enter") document.getElementById("place-title-input").blur();
+    if (e.key === "Escape") {
+      document.getElementById("place-title-input").value = document.getElementById("place-modal-title").textContent;
+      document.getElementById("place-title-input").blur();
+    }
+  };
+
   document.getElementById("place-save-btn").onclick = async () => {
     if (!currentPlaceDetail) return;
     const { day, index } = currentPlaceDetail;
     const item = ITINERARY[day]?.items[index];
     const key = `${day}-${slugKey(item || index)}`;
-    const newName = document.getElementById("place-name-input").value.trim();
+    const newName = document.getElementById("place-title-input").value.trim() || document.getElementById("place-modal-title").textContent.trim();
     placeNotes[key] = {
       overrideName: newName !== item.name ? newName : "",
       reservationTime: document.getElementById("place-reservation-time").value.trim(),
@@ -599,7 +625,12 @@ function openPlaceModal(day, index) {
   const key = `${day}-${slugKey(item)}`;
   const saved = placeNotes[key] || {};
 
-  document.getElementById("place-modal-title").textContent = (placeNotes[key]?.overrideName) || item.name;
+  const displayName = (placeNotes[key]?.overrideName) || item.name;
+  document.getElementById("place-modal-title").textContent = displayName;
+  document.getElementById("place-title-input").value = displayName;
+  document.getElementById("place-modal-title").style.display = "";
+  document.getElementById("place-title-input").style.display = "none";
+  document.getElementById("btn-edit-title").style.display = "";
 
   // Meta info
   const metaEl = document.getElementById("place-modal-meta");

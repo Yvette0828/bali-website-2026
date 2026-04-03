@@ -829,6 +829,52 @@ body {
   letter-spacing: -0.3px;
 }
 
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.place-title-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-edit-title {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.btn-edit-title:hover { color: #888; }
+
+.place-title-input {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  padding: 2px 0;
+  letter-spacing: -0.3px;
+  font-family: inherit;
+  min-width: 0;
+}
+
 /* Form */
 .form-group {
   margin-bottom: 16px;
