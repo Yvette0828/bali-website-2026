@@ -296,6 +296,7 @@ function renderTimeline(day, items) {
     const isVisited = key ? !!visited[key] : false;
     const isTentative = !isBooking && item.tentative && !visited[key + '_confirmed'];
     const isTentativeBooking = isBooking && item.status === 'tentative';
+    const displayTime = isBooking ? (item.time || "") : (saved.overrideTime || item.time || "");
 
     const wrapper = document.createElement("div");
     wrapper.className = "timeline-item";
@@ -325,7 +326,7 @@ function renderTimeline(day, items) {
     } else {
       wrapper.innerHTML = `
         <div class="timeline-left">
-          <div class="timeline-time ${isTentative ? 'tentative-time' : ''}">${item.time || ""}</div>
+          <div class="timeline-time ${isTentative ? 'tentative-time' : ''}">${displayTime}</div>
           <div class="timeline-dot ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative-dot' : ''}"></div>
           ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
         </div>
