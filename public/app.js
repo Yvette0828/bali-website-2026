@@ -766,9 +766,10 @@ function openBookingDetail(b) {
   const metaEl = document.getElementById("place-modal-meta");
   metaEl.innerHTML = `
     ${b.time ? `<span class="place-tag">${b.time}</span>` : ""}
-    ${b.reservation ? `<span class="place-tag confirmed">預約 ${b.reservation}</span>` : ""}
-    ${b.confirmation ? `<span class="place-tag"># ${b.confirmation}</span>` : ""}
-    <span class="place-tag type-tag">${TYPE_ICONS[b.type] || '📌'}</span>
+    ${b.reservation ? `<span class="place-tag">${b.reservation}</span>` : ""}
+    <span class="place-tag type-tag">${TYPE_ICONS[b.type] || '📌'} ${labelForType(b.type)}</span>
+    ${b.status === 'tentative' ? '<span class="place-tag" style="background:rgba(200,200,210,0.3);color:#888">❓ 待定</span>' : '<span class="place-tag" style="background:rgba(52,199,89,0.1);color:#1b7a3e">✅ 已確定</span>'}
+    ${b.confirmation ? `<div class="place-address"># ${b.confirmation}</div>` : ""}
   `;
 
   const mapsUrl = b.mapsUrl || `https://maps.google.com/?q=${encodeURIComponent(b.place + ', Bali')}`;
@@ -780,9 +781,38 @@ function openBookingDetail(b) {
   document.getElementById("place-maps-input").value = b.mapsUrl || "";
   document.getElementById("place-notes").value = b.notes || "";
 
-  // Tentative/manage actions
-  document.getElementById("place-tentative-actions").style.display = "none";
-  document.getElementById("place-manage-actions").style.display = "none";
+  // Tentative / manage actions for bookings
+  const isTentativeB = b.status === 'tentative';
+  const tentativeActions = document.getElementById("place-tentative-actions");
+  const manageActions = document.getElementById("place-manage-actions");
+
+  if (isTentativeB) {
+    tentativeActions.style.display = "block";
+    manageActions.style.display = "none";
+    document.getElementById("place-confirm-btn").onclick = async () => {
+      b.status = 'confirmed';
+      const idx = bookings.findIndex(x => x.id === b.id);
+      if (idx !== -1) bookings[idx] = b;
+      await saveBookings(); closePlaceModal(); renderDay(currentDay); showToast("已確定 ✓");
+    };
+    document.getElementById("place-remove-btn").onclick = async () => {
+      bookings = bookings.filter(x => x.id !== b.id);
+      await saveBookings(); closePlaceModal(); renderDay(currentDay); showToast("Removed 🗑️");
+    };
+  } else {
+    tentativeActions.style.display = "none";
+    manageActions.style.display = "block";
+    document.getElementById("place-set-tentative-btn").onclick = async () => {
+      b.status = 'tentative';
+      const idx = bookings.findIndex(x => x.id === b.id);
+      if (idx !== -1) bookings[idx] = b;
+      await saveBookings(); closePlaceModal(); renderDay(currentDay); showToast("標為待定 ❓");
+    };
+    document.getElementById("place-remove-confirmed-btn").onclick = async () => {
+      bookings = bookings.filter(x => x.id !== b.id);
+      await saveBookings(); closePlaceModal(); renderDay(currentDay); showToast("Removed 🗑️");
+    };
+  }
 
   // Visited state for booking
   const bookingVisitedKey = `booking-${b.id}`;
