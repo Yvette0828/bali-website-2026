@@ -92,6 +92,7 @@ const TYPE_ICONS = {
 
 let bookings = [];
 let placeNotes = {}; // { "day-index": { reservationTime, notes } }
+let visited = {}; // { "day-index": true }
 let currentDay = "1";
 let editingId = null;
 let selectedType = "restaurant";
@@ -117,6 +118,8 @@ async function loadBookings() {
   if (local) bookings = JSON.parse(local);
   const localNotes = localStorage.getItem("bali_place_notes");
   if (localNotes) placeNotes = JSON.parse(localNotes);
+  const localVisited = localStorage.getItem("bali_visited");
+  if (localVisited) visited = JSON.parse(localVisited);
 
   try {
     const res = await fetch("/api/bookings");
@@ -130,6 +133,10 @@ async function loadBookings() {
         placeNotes = data.placeNotes;
         localStorage.setItem("bali_place_notes", JSON.stringify(placeNotes));
       }
+      if (data.visited) {
+        visited = data.visited;
+        localStorage.setItem("bali_visited", JSON.stringify(visited));
+      }
     }
   } catch (e) {
     console.log("Offline mode: using local data");
@@ -139,11 +146,12 @@ async function loadBookings() {
 async function saveBookings() {
   localStorage.setItem("bali_bookings", JSON.stringify(bookings));
   localStorage.setItem("bali_place_notes", JSON.stringify(placeNotes));
+  localStorage.setItem("bali_visited", JSON.stringify(visited));
   try {
     await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bookings, placeNotes })
+      body: JSON.stringify({ bookings, placeNotes, visited })
     });
   } catch (e) {
     console.log("Offline: saved locally only");
@@ -207,6 +215,7 @@ function renderTimeline(day, items) {
     const key = `${day}-${i}`;
     const saved = placeNotes[key] || {};
     const hasNote = saved.reservationTime || saved.notes;
+    const isVisited = !!visited[key];
 
     const wrapper = document.createElement("div");
     wrapper.className = "timeline-item";
@@ -214,13 +223,14 @@ function renderTimeline(day, items) {
     wrapper.innerHTML = `
       <div class="timeline-left">
         <div class="timeline-time">${item.time || ""}</div>
-        <div class="timeline-dot"></div>
-        ${i < items.length - 1 ? '<div class="timeline-line"></div>' : ""}
+        <div class="timeline-dot ${isVisited ? 'visited' : ''}"></div>
+        ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
       </div>
-      <div class="timeline-card type-${item.type}" data-day="${day}" data-index="${i}">
+      <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''}" data-day="${day}" data-index="${i}">
         <div class="card-name">
           <span class="card-type-dot"></span>
-          ${item.name}
+          <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
+          ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
           <span class="card-chevron">›</span>
         </div>
         ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
@@ -341,6 +351,7 @@ function setupPlaceModal() {
         <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
       </div>
       <div class="form-actions">
+        <button type="button" class="btn-visited" id="place-visited-btn">✓ 標記去過</button>
         <button type="button" class="btn-primary" id="place-save-btn">儲存</button>
       </div>
     </div>
@@ -362,6 +373,22 @@ function setupPlaceModal() {
     closePlaceModal();
     renderDay(currentDay);
     showToast("已儲存 ✓");
+  };
+
+  document.getElementById("place-visited-btn").onclick = async () => {
+    if (!currentPlaceDetail) return;
+    const { day, index } = currentPlaceDetail;
+    const key = `${day}-${index}`;
+    const wasVisited = !!visited[key];
+    if (wasVisited) {
+      delete visited[key];
+    } else {
+      visited[key] = true;
+    }
+    await saveBookings();
+    closePlaceModal();
+    renderDay(currentDay);
+    showToast(wasVisited ? "已取消標記" : "已打卡 ✓ 🌴");
   };
 }
 
@@ -396,6 +423,12 @@ function openPlaceModal(day, index) {
 
   document.getElementById("place-reservation-time").value = saved.reservationTime || "";
   document.getElementById("place-notes").value = saved.notes || "";
+
+  const key2 = `${day}-${index}`;
+  const isVisited = !!visited[key2];
+  const visitedBtn = document.getElementById("place-visited-btn");
+  visitedBtn.textContent = isVisited ? "↩ 取消去過" : "✓ 標記去過";
+  visitedBtn.classList.toggle("btn-visited-active", isVisited);
 
   document.getElementById("place-modal-overlay").classList.add("open");
   setTimeout(() => document.getElementById("place-reservation-time").focus(), 350);
