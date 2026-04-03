@@ -101,4 +101,26 @@ async function initAuth() {
   document.getElementById("auth-status").textContent = "";
 }
 
-document.addEventListener("DOMContentLoaded", initAuth);
+function detectInAppBrowser() {
+  const ua = navigator.userAgent || "";
+  // LINE, Instagram, Facebook, WeChat in-app browsers
+  return /Line|FBAN|FBAV|Instagram|MicroMessenger|WebView|wv/.test(ua)
+    || (/(iPhone|iPod|iPad)/.test(ua) && !/Safari/.test(ua));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (detectInAppBrowser()) {
+    document.getElementById("auth-overlay").style.display = "flex";
+    document.getElementById("auth-status").innerHTML = `
+      ⚠️ 請用 <strong>Safari</strong> 或 <strong>Chrome</strong> 打開此連結，
+      不支援 LINE / Instagram 內建瀏覽器登入。<br/><br/>
+      請複製連結到瀏覽器：<br/>
+      <code style="font-size:12px;background:#f0f0f0;padding:4px 8px;border-radius:6px;display:inline-block;margin-top:6px;word-break:break-all;">https://bali-for-rebuilding.netlify.app</code>
+    `;
+    // Hide the Google sign-in button since it won't work
+    const signInDiv = document.querySelector(".g_id_signin");
+    if (signInDiv) signInDiv.style.display = "none";
+    return;
+  }
+  initAuth();
+});
