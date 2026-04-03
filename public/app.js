@@ -100,13 +100,41 @@ let currentPlaceDetail = null;
 
 // === Init ===
 document.addEventListener("DOMContentLoaded", async () => {
+  // Read initial day from URL hash e.g. #day-3 or #day-backup
+  const hashDay = getHashDay();
+  if (hashDay) currentDay = hashDay;
+
   await loadBookings();
   renderDay(currentDay);
   setupTabs();
   setupModal();
   setupPlaceModal();
   hideLoading();
+
+  // Set active tab to match
+  document.querySelectorAll(".day-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.day === String(currentDay));
+  });
+
+  // Listen for hash changes (browser back/forward)
+  window.addEventListener("hashchange", () => {
+    const d = getHashDay();
+    if (d && d !== currentDay) {
+      currentDay = d;
+      document.querySelectorAll(".day-tab").forEach(t => {
+        t.classList.toggle("active", t.dataset.day === String(d));
+      });
+      renderDay(d);
+    }
+  });
 });
+
+function getHashDay() {
+  const hash = window.location.hash; // e.g. "#day-3" or "#day-backup"
+  if (!hash) return null;
+  const match = hash.match(/^#day-(.+)$/);
+  return match ? match[1] : null;
+}
 
 function hideLoading() {
   document.getElementById("loading").style.display = "none";
@@ -167,6 +195,7 @@ function setupTabs() {
     document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
     currentDay = day;
+    history.replaceState(null, "", `#day-${day}`);
     renderDay(day);
   });
 }
