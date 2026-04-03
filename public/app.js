@@ -230,13 +230,50 @@ function renderDay(day) {
     </div>
     <div class="section-label">行程</div>
     <div class="timeline" id="timeline-${day}"></div>
-    <div class="section-label">預訂資訊</div>
-    <div class="bookings-list" id="bookings-${day}"></div>
   `;
 
   main.appendChild(section);
-  renderTimeline(day, data.items);
-  renderBookings(day);
+  renderMergedTimeline(day, data.items);
+}
+
+function renderMergedTimeline(day, itineraryItems) {
+  // Build combined list of itinerary items + user bookings for this day
+  const dayBookings = bookings.filter(b => String(b.day) === String(day));
+
+  // Convert bookings to timeline-compatible objects
+  const bookingItems = dayBookings.map(b => ({
+    _isBooking: true,
+    _booking: b,
+    id: `booking-${b.id}`,
+    time: b.time || "",
+    name: b.place,
+    type: b.type || "other",
+    duration: b.reservation ? `預約 ${b.reservation}` : "",
+    status: b.status,
+  }));
+
+  // Merge and sort by time
+  const allItems = [...itineraryItems, ...bookingItems]
+    .filter(item => !item._removed)
+    .sort((a, b) => {
+      const ta = a.time || "99:99";
+      const tb = b.time || "99:99";
+      return ta.localeCompare(tb);
+    });
+
+  renderTimeline(day, allItems);
+
+  // If no bookings, show add prompt at bottom
+  const el = document.getElementById(`timeline-${day}`);
+  if (el && dayBookings.length === 0) {
+    const hint = document.createElement("div");
+    hint.style.cssText = "padding:16px 0 4px;";
+    hint.innerHTML = `<button class="btn-add-inline" onclick="openModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      新增自訂行程
+    </button>`;
+    el.appendChild(hint);
+  }
 }
 
 function renderTimeline(day, items) {
@@ -245,45 +282,74 @@ function renderTimeline(day, items) {
 
   items.forEach((item, i) => {
     if (item._removed) return; // skip removed tentative items
-    const key = `${day}-${slugKey(item)}`;
-    const saved = placeNotes[key] || {};
+    const isBooking = !!item._isBooking;
+    const key = isBooking ? null : `${day}-${slugKey(item)}`;
+    const saved = key ? (placeNotes[key] || {}) : {};
     const hasNote = saved.reservationTime || saved.notes;
-    const isVisited = !!visited[key];
-    const isTentative = item.tentative && !visited[key + '_confirmed'];
+    const isVisited = key ? !!visited[key] : false;
+    const isTentative = !isBooking && item.tentative && !visited[key + '_confirmed'];
+    const isTentativeBooking = isBooking && item.status === 'tentative';
 
     const wrapper = document.createElement("div");
     wrapper.className = "timeline-item";
 
-    wrapper.innerHTML = `
-      <div class="timeline-left">
-        <div class="timeline-time ${isTentative ? 'tentative-time' : ''}">${item.time || ""}</div>
-        <div class="timeline-dot ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative-dot' : ''}"></div>
-        ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
-      </div>
-      <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative' : ''}" data-day="${day}" data-index="${i}">
-        <div class="card-name">
-          <span class="card-type-dot"></span>
-          <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
-          ${isTentative ? '<span class="tentative-badge">❓ 待定</span>' : ''}
-          ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
-          <span class="card-chevron">›</span>
+    if (isBooking) {
+      // Render booking card inline in timeline
+      const b = item._booking;
+      wrapper.innerHTML = `
+        <div class="timeline-left">
+          <div class="timeline-time">${item.time || ""}</div>
+          <div class="timeline-dot booking-dot"></div>
+          ${i < items.length - 1 ? '<div class="timeline-line"></div>' : ""}
         </div>
-        ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
-        ${saved.reservationTime ? `<div class="card-reservation-badge">🕐 ${saved.reservationTime}</div>` : ""}
-        ${hasNote && saved.notes ? `<div class="card-duration" style="margin-top:4px;color:var(--text-tertiary)">📝 ${saved.notes.substring(0,40)}${saved.notes.length>40?'…':''}</div>` : ""}
-      </div>
-    `;
+        <div class="timeline-card booking-inline type-${item.type} ${isTentativeBooking ? 'tentative' : ''}" data-booking-id="${b.id}">
+          <div class="card-name">
+            <span class="card-type-dot"></span>
+            <span>${item.name}</span>
+            ${isTentativeBooking ? '<span class="tentative-badge">❓ 待定</span>' : ''}
+            <span class="booking-inline-badge">✏️ 自訂</span>
+            <span class="card-chevron">›</span>
+          </div>
+          ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
+          ${b.confirmation ? `<div class="card-duration"># ${b.confirmation}</div>` : ""}
+          ${b.notes ? `<div class="card-duration" style="color:var(--text-tertiary)">📝 ${b.notes.substring(0,40)}${b.notes.length>40?'…':''}</div>` : ""}
+        </div>
+      `;
+    } else {
+      wrapper.innerHTML = `
+        <div class="timeline-left">
+          <div class="timeline-time ${isTentative ? 'tentative-time' : ''}">${item.time || ""}</div>
+          <div class="timeline-dot ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative-dot' : ''}"></div>
+          ${i < items.length - 1 ? `<div class="timeline-line ${isVisited ? 'visited' : ''}"></div>` : ""}
+        </div>
+        <div class="timeline-card type-${item.type} ${isVisited ? 'visited' : ''} ${isTentative ? 'tentative' : ''}" data-day="${day}" data-index="${i}">
+          <div class="card-name">
+            <span class="card-type-dot"></span>
+            <span class="${isVisited ? 'card-name-visited' : ''}">${item.name}</span>
+            ${isTentative ? '<span class="tentative-badge">❓ 待定</span>' : ''}
+            ${isVisited ? '<span class="visited-badge">✓ 去過</span>' : ''}
+            <span class="card-chevron">›</span>
+          </div>
+          ${item.duration ? `<div class="card-duration">${item.duration}</div>` : ""}
+          ${saved.reservationTime ? `<div class="card-reservation-badge">🕐 ${saved.reservationTime}</div>` : ""}
+          ${hasNote && saved.notes ? `<div class="card-duration" style="margin-top:4px;color:var(--text-tertiary)">📝 ${saved.notes.substring(0,40)}${saved.notes.length>40?'…':''}</div>` : ""}
+        </div>
+      `;
+    }
 
     el.appendChild(wrapper);
   });
 
-  // Click on timeline cards
+  // Click handler
   el.addEventListener("click", e => {
     const card = e.target.closest(".timeline-card");
     if (!card) return;
-    const d = card.dataset.day;
-    const idx = parseInt(card.dataset.index);
-    openPlaceModal(d, idx);
+    if (card.dataset.bookingId) {
+      const b = bookings.find(x => x.id === card.dataset.bookingId);
+      if (b) openModal(b);
+    } else if (card.dataset.day) {
+      openPlaceModal(card.dataset.day, parseInt(card.dataset.index));
+    }
   });
 }
 
@@ -666,13 +732,12 @@ async function saveBooking() {
 
   await saveBookings();
   closeModal();
-
   currentDay = booking.day;
   document.querySelectorAll(".day-tab").forEach(t => {
     t.classList.toggle("active", t.dataset.day === String(currentDay));
   });
   renderDay(currentDay);
-  showToast(editingId ? "已更新 ✓" : "已新增 ✓");
+  showToast(editingId ? "Updated ✓" : "Added ✓");
 }
 
 // === Helpers ===
