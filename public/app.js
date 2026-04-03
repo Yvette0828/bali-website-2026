@@ -26,7 +26,7 @@ const ITINERARY = {
       { time: "09:40", name: "Gigi Susu", type: "activity", duration: "~1h", address: "Canggu, Kuta Utara, Badung Regency, Bali, Indonesia" },
       { time: "10:35", name: "Sensatia – Batu Bolong Canggu", type: "activity", duration: "~1h", address: "Jl. Batu Bolong No.56, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
       { time: "11:38", name: "La Brisa Sunday Market", type: "activity", duration: "~2.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
-      { time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "Spa ~3h", address: "Jl. Pantai Batu Bolong No.97, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
+      { time: "14:15", name: "Udara Bali Yoga Detox & Spa", type: "activity", duration: "頌缽課程 ~3h", address: "Jl. Pantai Batu Bolong No.97, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
       { time: "17:42", name: "La Brisa Bali | Beach Club", type: "activity", duration: "夕陽 ~1.5h", address: "Jl. Pantai Batu Mejan, Echo Beach, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali" },
       { time: "19:11", name: "Naughty Nuri's Warung Seminyak", type: "restaurant", duration: "晚餐 ~1h", address: "Jl. Raya Petitenget No.17, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali" },
       { time: "20:26", name: "英迪格酒店", type: "hotel", duration: "就寢", address: "Jl. Pantai Berawa No.22, Tibubeneng, Kuta Utara, Kabupaten Badung, Bali 80361" },
