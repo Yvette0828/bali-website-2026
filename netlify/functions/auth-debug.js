@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const AUTH_GIST_ID = process.env.AUTH_GIST_ID;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const AUTH_FILENAME = 'bali-auth.json';

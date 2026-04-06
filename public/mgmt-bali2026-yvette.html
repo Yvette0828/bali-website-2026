@@ -98,7 +98,7 @@ async function handleAdminLogin(response) {
   });
   const data = await res.json();
 
-  if (data.status !== "approved") {
+  if (data.status !== "approved" || data.user?.role !== "admin") {
     document.getElementById("login-status").textContent = "⛔ 你不是管理者，無法存取此頁面。";
     return;
   }
@@ -142,33 +142,55 @@ function renderPending(list) {
   `).join("");
 }
 
+function getEntryEmail(entry) {
+  return typeof entry === "string" ? entry : (entry?.email || "");
+}
+
+function getEntryRole(entry) {
+  return typeof entry === "object" && entry?.role ? entry.role : "editor";
+}
+
+function getEntryName(entry) {
+  return typeof entry === "object" ? (entry?.name || "") : "";
+}
+
 function renderApproved(list) {
   const el = document.getElementById("approved-list");
   if (!list.length) { el.innerHTML = '<p class="empty">無</p>'; return; }
-  el.innerHTML = list.map(email => `
+  el.innerHTML = list.map(entry => {
+    const email = getEntryEmail(entry);
+    const role = getEntryRole(entry);
+    const name = getEntryName(entry);
+    return `
     <div class="card">
-      <div class="card-info"><div class="card-email">${email}</div></div>
+      <div class="card-info">
+        ${name ? `<div class="card-name">${name}</div>` : ""}
+        <div class="card-email">${email}</div>
+        <div class="card-time">角色：${role}</div>
+      </div>
       ${email !== adminEmail ? `<button class="btn btn-reject" onclick="reject('${email}')">撤銷</button>` : '<span style="font-size:12px;color:#aaa;">管理者</span>'}
     </div>
-  `).join("");
+  `}).join("");
 }
 
 function renderRejected(list) {
   const el = document.getElementById("rejected-list");
   if (!list.length) { el.innerHTML = '<p class="empty">無</p>'; return; }
-  el.innerHTML = list.map(email => `
+  el.innerHTML = list.map(entry => {
+    const email = getEntryEmail(entry);
+    return `
     <div class="card">
       <div class="card-info"><div class="card-email">${email}</div></div>
       <button class="btn btn-approve" onclick="approve('${email}')">重新核准</button>
     </div>
-  `).join("");
+  `}).join("");
 }
 
-async function approve(targetEmail) {
+async function approve(targetEmail, role = "viewer") {
   await fetch("/api/auth", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "approve", email: adminEmail, targetEmail })
+    body: JSON.stringify({ action: "approve", email: adminEmail, targetEmail, role })
   });
   loadList();
 }
