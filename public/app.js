@@ -651,7 +651,7 @@ function setupPlaceModal() {
 }
 
 function openPlaceModal(day, index) {
-  if (!(window.canEdit && window.canEdit())) return;
+  const editable = window.canEdit && window.canEdit();
   const item = ITINERARY[day]?.items[index];
   if (!item) return;
   currentPlaceDetail = { day, index };
@@ -663,8 +663,8 @@ function openPlaceModal(day, index) {
   document.getElementById("place-modal-title").textContent = displayName;
   document.getElementById("place-title-input").value = displayName;
   document.getElementById("place-modal-title").style.display = "";
-  document.getElementById("place-title-input").style.display = "none";
-  document.getElementById("btn-edit-title").style.display = "";
+  document.getElementById("place-title-input").style.display = editable ? "none" : "";
+  document.getElementById("btn-edit-title").style.display = editable ? "" : "none";
 
   // Meta info
   const metaEl = document.getElementById("place-modal-meta");
@@ -691,22 +691,28 @@ function openPlaceModal(day, index) {
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
+  document.getElementById("place-reservation-time").disabled = !editable;
+  document.getElementById("place-time-input").disabled = !editable;
+  document.getElementById("place-maps-input").disabled = !editable;
+  document.getElementById("place-notes").disabled = !editable;
+  document.getElementById("place-save-btn").style.display = editable ? "" : "none";
+
   const key2 = `${day}-${slugKey(item)}`;
   const isVisited = !!visited[key2];
   const isTentativeItem = !!item.tentative;
   const visitedBtn = document.getElementById("place-visited-btn");
   visitedBtn.textContent = isVisited ? "↩ Cancel visited" : "✓ Mark as visited";
   visitedBtn.classList.toggle("btn-visited-active", isVisited);
-  visitedBtn.style.display = isTentativeItem ? "none" : "";
+  visitedBtn.style.display = editable && !isTentativeItem ? "" : "none";
 
   // Set-tentative and remove buttons (only for non-tentative confirmed items)
   const setTentativeBtn = document.getElementById("place-set-tentative-btn");
   const removeConfirmedBtn = document.getElementById("place-remove-confirmed-btn");
-  setTentativeBtn.style.display = (!isTentativeItem && !item._removed) ? "" : "none";
-  removeConfirmedBtn.style.display = (!isTentativeItem && !item._removed) ? "" : "none";
+  setTentativeBtn.style.display = (editable && !isTentativeItem && !item._removed) ? "" : "none";
+  removeConfirmedBtn.style.display = (editable && !isTentativeItem && !item._removed) ? "" : "none";
 
   const tentativeActions = document.getElementById("place-tentative-actions");
-  tentativeActions.style.display = isTentativeItem ? "block" : "none";
+  tentativeActions.style.display = editable && isTentativeItem ? "block" : "none";
 
   document.getElementById("place-manage-actions").style.display = "none";
 

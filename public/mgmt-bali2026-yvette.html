@@ -136,9 +136,10 @@ function renderPending(list) {
         <div class="card-email">${u.email}</div>
         <div class="card-time">${u.requestedAt ? new Date(u.requestedAt).toLocaleString("zh-TW") : ""}</div>
       </div>
-      <select id="role-${u.email}" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;">
+      <select id="role-${u.email}" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;min-width:92px;background:white;">
         <option value="viewer">viewer</option>
         <option value="editor">editor</option>
+        <option value="admin">admin</option>
       </select>
       <button class="btn btn-approve" onclick="approveWithSelectedRole('${u.email}')">✓ 核准</button>
       <button class="btn btn-reject" onclick="reject('${u.email}')">✕ 拒絕</button>
