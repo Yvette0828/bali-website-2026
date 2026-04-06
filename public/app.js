@@ -490,7 +490,6 @@ function setupPlaceModal() {
           <button class="btn-edit-title" id="btn-edit-title" title="修改標題">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
-          <input type="text" id="place-title-input" class="place-title-input" style="display:none;" />
         </div>
         <button class="btn-icon" id="place-modal-close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -502,23 +501,29 @@ function setupPlaceModal() {
         在 Google Maps 開啟
       </a>
       <div class="place-divider"></div>
-      <div class="form-group">
-        <label>預約時間（可自行填寫）</label>
-        <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
+      <div id="place-edit-fields">
+        <div class="form-group" id="place-title-edit-group" style="display:none;">
+          <label>標題</label>
+          <input type="text" id="place-title-input" class="place-title-input" />
+        </div>
+        <div class="form-group">
+          <label>預約時間（可自行填寫）</label>
+          <input type="text" id="place-reservation-time" placeholder="例：18:30 for 2 pax" />
+        </div>
+        <div class="form-group">
+          <label>時間（可修改）</label>
+          <input type="time" id="place-time-input" />
+        </div>
+        <div class="form-group">
+          <label>Google Maps 連結（可覆蓋預設搜尋）</label>
+          <input type="url" id="place-maps-input" placeholder="貼入 Google Maps 分享連結" />
+        </div>
+        <div class="form-group">
+          <label>備註</label>
+          <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
+        </div>
       </div>
-      <div class="form-group">
-        <label>時間（可修改）</label>
-        <input type="time" id="place-time-input" />
-      </div>
-      <div class="form-group">
-        <label>Google Maps 連結（可覆蓋預設搜尋）</label>
-        <input type="url" id="place-maps-input" placeholder="貼入 Google Maps 分享連結" />
-      </div>
-      <div class="form-group">
-        <label>備註</label>
-        <textarea id="place-notes" placeholder="記錄任何注意事項..." rows="3"></textarea>
-      </div>
-      <div class="form-actions" style="flex-wrap:nowrap;gap:6px;margin-top:16px;">
+      <div class="form-actions" id="place-form-actions" style="flex-wrap:nowrap;gap:6px;margin-top:16px;">
         <button type="button" class="place-action-btn btn-visited" id="place-visited-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;">✓ 去過</button>
         <button type="button" class="place-action-btn btn-visited" id="place-set-tentative-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;display:none;">❓ 待定</button>
         <button type="button" class="place-action-btn btn-remove-plan" id="place-remove-confirmed-btn" style="flex:1;font-size:12px;padding:10px 6px;white-space:nowrap;display:none;">× 移除</button>
@@ -543,6 +548,7 @@ function setupPlaceModal() {
   document.getElementById("btn-edit-title").onclick = () => {
     document.getElementById("place-modal-title").style.display = "none";
     document.getElementById("btn-edit-title").style.display = "none";
+    document.getElementById("place-title-edit-group").style.display = "block";
     const inp = document.getElementById("place-title-input");
     inp.style.display = "";
     inp.focus();
@@ -553,6 +559,7 @@ function setupPlaceModal() {
     if (val) document.getElementById("place-modal-title").textContent = val;
     document.getElementById("place-modal-title").style.display = "";
     document.getElementById("btn-edit-title").style.display = "";
+    document.getElementById("place-title-edit-group").style.display = "none";
     document.getElementById("place-title-input").style.display = "none";
   };
   document.getElementById("place-title-input").onkeydown = e => {
@@ -663,7 +670,8 @@ function openPlaceModal(day, index) {
   document.getElementById("place-modal-title").textContent = displayName;
   document.getElementById("place-title-input").value = displayName;
   document.getElementById("place-modal-title").style.display = "";
-  document.getElementById("place-title-input").style.display = editable ? "none" : "";
+  document.getElementById("place-title-edit-group").style.display = "none";
+  document.getElementById("place-title-input").style.display = "none";
   document.getElementById("btn-edit-title").style.display = editable ? "" : "none";
 
   // Meta info
@@ -691,6 +699,8 @@ function openPlaceModal(day, index) {
   document.getElementById("place-maps-input").value = saved.mapsUrl || "";
   document.getElementById("place-notes").value = saved.notes || "";
 
+  document.getElementById("place-edit-fields").style.display = editable ? "block" : "none";
+  document.getElementById("place-form-actions").style.display = editable ? "flex" : "none";
   document.getElementById("place-reservation-time").disabled = !editable;
   document.getElementById("place-time-input").disabled = !editable;
   document.getElementById("place-maps-input").disabled = !editable;
@@ -853,6 +863,9 @@ function openBookingDetail(b) {
   currentPlaceDetail = null; // not an itinerary item
 
   document.getElementById("place-modal-title").textContent = b.place;
+  document.getElementById("place-title-edit-group").style.display = "none";
+  document.getElementById("place-title-input").style.display = "none";
+  document.getElementById("btn-edit-title").style.display = "none";
 
   const metaEl = document.getElementById("place-modal-meta");
   metaEl.innerHTML = `
@@ -877,6 +890,8 @@ function openBookingDetail(b) {
   const tentativeActions = document.getElementById("place-tentative-actions");
   const manageActions = document.getElementById("place-manage-actions");
 
+  document.getElementById("place-edit-fields").style.display = editable ? "block" : "none";
+  document.getElementById("place-form-actions").style.display = editable ? "flex" : "none";
   document.getElementById("place-reservation-time").disabled = !editable;
   document.getElementById("place-time-input").disabled = !editable;
   document.getElementById("place-maps-input").disabled = !editable;
