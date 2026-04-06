@@ -186,7 +186,12 @@ function renderRejected(list) {
     return `
     <div class="card">
       <div class="card-info"><div class="card-email">${email}</div></div>
-      <button class="btn btn-approve" onclick="approve('${email}')">重新核准</button>
+      <select id="rejected-role-${email}" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;min-width:92px;background:white;">
+        <option value="viewer">viewer</option>
+        <option value="editor">editor</option>
+        <option value="admin">admin</option>
+      </select>
+      <button class="btn btn-approve" onclick="reapproveWithSelectedRole('${email}')">重新核准</button>
     </div>
   `}).join("");
 }
@@ -202,6 +207,11 @@ async function approve(targetEmail, role = "viewer") {
 
 function approveWithSelectedRole(targetEmail) {
   const role = document.getElementById(`role-${targetEmail}`)?.value || 'viewer';
+  return approve(targetEmail, role);
+}
+
+function reapproveWithSelectedRole(targetEmail) {
+  const role = document.getElementById(`rejected-role-${targetEmail}`)?.value || 'viewer';
   return approve(targetEmail, role);
 }
 
