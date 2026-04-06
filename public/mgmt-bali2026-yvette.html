@@ -166,14 +166,23 @@ function renderApproved(list) {
     const email = getEntryEmail(entry);
     const role = getEntryRole(entry);
     const name = getEntryName(entry);
+    const isSelf = email === adminEmail;
     return `
     <div class="card">
       <div class="card-info">
         ${name ? `<div class="card-name">${name}</div>` : ""}
         <div class="card-email">${email}</div>
-        <div class="card-time">角色：${role}</div>
+        <div class="card-time">目前角色：${role}</div>
       </div>
-      ${email !== adminEmail ? `<button class="btn btn-reject" onclick="reject('${email}')">撤銷</button>` : '<span style="font-size:12px;color:#aaa;">管理者</span>'}
+      ${isSelf ? '<span style="font-size:12px;color:#aaa;">管理者</span>' : `
+        <select id="approved-role-${email}" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;min-width:92px;background:white;">
+          <option value="viewer" ${role === 'viewer' ? 'selected' : ''}>viewer</option>
+          <option value="editor" ${role === 'editor' ? 'selected' : ''}>editor</option>
+          <option value="admin" ${role === 'admin' ? 'selected' : ''}>admin</option>
+        </select>
+        <button class="btn btn-approve" onclick="updateApprovedRole('${email}')">更新權限</button>
+        <button class="btn btn-reject" onclick="reject('${email}')">撤銷</button>
+      `}
     </div>
   `}).join("");
 }
@@ -212,6 +221,11 @@ function approveWithSelectedRole(targetEmail) {
 
 function reapproveWithSelectedRole(targetEmail) {
   const role = document.getElementById(`rejected-role-${targetEmail}`)?.value || 'viewer';
+  return approve(targetEmail, role);
+}
+
+function updateApprovedRole(targetEmail) {
+  const role = document.getElementById(`approved-role-${targetEmail}`)?.value || 'viewer';
   return approve(targetEmail, role);
 }
 
