@@ -179,9 +179,13 @@ async function saveBookings() {
   localStorage.setItem("bali_place_notes", JSON.stringify(placeNotes));
   localStorage.setItem("bali_visited", JSON.stringify(visited));
   try {
+    const token = localStorage.getItem("bali_token");
     await fetch("/api/bookings", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ bookings, placeNotes, visited })
     });
   } catch (e) {
@@ -272,7 +276,7 @@ function renderMergedTimeline(day, itineraryItems) {
 
   // Always show add button at bottom
   const el = document.getElementById(`timeline-${day}`);
-  if (el) {
+  if (el && window.canEdit && window.canEdit()) {
     const hint = document.createElement("div");
     hint.style.cssText = "padding:16px 0 4px;";
     const btnLabel = day === 'backup' ? '新增景點' : '新增自訂行程';
@@ -461,13 +465,15 @@ function renderBackupBookings() {
   }
 
   // Always show add button
-  const hint = document.createElement("div");
-  hint.style.cssText = "padding:12px 0 4px;";
-  hint.innerHTML = `<button class="btn-add-inline" onclick="openModalForBackup()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    新增景點
-  </button>`;
-  el.appendChild(hint);
+  if (window.canEdit && window.canEdit()) {
+    const hint = document.createElement("div");
+    hint.style.cssText = "padding:12px 0 4px;";
+    hint.innerHTML = `<button class="btn-add-inline" onclick="openModalForBackup()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      新增景點
+    </button>`;
+    el.appendChild(hint);
+  }
 }
 
 // === Place Detail Modal ===
@@ -645,6 +651,7 @@ function setupPlaceModal() {
 }
 
 function openPlaceModal(day, index) {
+  if (!(window.canEdit && window.canEdit())) return;
   const item = ITINERARY[day]?.items[index];
   if (!item) return;
   currentPlaceDetail = { day, index };
@@ -768,6 +775,7 @@ function setupModal() {
 }
 
 function openModal(booking = null, isBackupMode = false) {
+  if (!(window.canEdit && window.canEdit())) return;
   editingId = booking?.id || null;
   const isEdit = !!booking;
 
@@ -834,6 +842,7 @@ async function saveBooking() {
 
 // === Booking Detail (inline timeline cards) ===
 function openBookingDetail(b) {
+  const editable = window.canEdit && window.canEdit();
   // Reuse place modal but fill with booking data
   currentPlaceDetail = null; // not an itinerary item
 
@@ -861,6 +870,19 @@ function openBookingDetail(b) {
   const isTentativeB = b.status === 'tentative';
   const tentativeActions = document.getElementById("place-tentative-actions");
   const manageActions = document.getElementById("place-manage-actions");
+
+  document.getElementById("place-reservation-time").disabled = !editable;
+  document.getElementById("place-time-input").disabled = !editable;
+  document.getElementById("place-maps-input").disabled = !editable;
+  document.getElementById("place-notes").disabled = !editable;
+  document.getElementById("place-save-btn").style.display = editable ? "" : "none";
+  document.getElementById("place-visited-btn").style.display = editable ? "" : "none";
+
+  if (!editable) {
+    tentativeActions.style.display = "none";
+    document.getElementById("place-set-tentative-btn").style.display = "none";
+    document.getElementById("place-remove-confirmed-btn").style.display = "none";
+  }
 
   if (isTentativeB) {
     tentativeActions.style.display = "block";
@@ -900,7 +922,7 @@ function openBookingDetail(b) {
   const visitedBtn = document.getElementById("place-visited-btn");
   visitedBtn.textContent = isBookingVisited ? "↩ Cancel visited" : "✓ Mark as visited";
   visitedBtn.classList.toggle("btn-visited-active", isBookingVisited);
-  visitedBtn.style.display = "";
+  visitedBtn.style.display = editable ? "" : "none";
   visitedBtn.onclick = async () => {
     if (visited[bookingVisitedKey]) {
       delete visited[bookingVisitedKey];

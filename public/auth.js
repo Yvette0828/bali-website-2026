@@ -3,6 +3,42 @@
 // ===========================
 
 let currentUser = null;
+window.currentUser = null;
+
+function getCurrentRole() {
+  return currentUser?.role || "viewer";
+}
+
+function canEdit() {
+  return ["editor", "admin"].includes(getCurrentRole());
+}
+
+function syncCurrentUser(user) {
+  currentUser = user || null;
+  window.currentUser = currentUser;
+}
+
+function updateRoleBasedUI() {
+  const editable = canEdit();
+  const addBtn = document.getElementById("btn-add");
+  if (addBtn) addBtn.style.display = editable ? "" : "none";
+
+  document.querySelectorAll(".btn-add-inline").forEach(el => {
+    el.style.display = editable ? "inline-flex" : "none";
+  });
+
+  const saveBtn = document.getElementById("btn-save");
+  if (saveBtn) saveBtn.style.display = editable ? "" : "none";
+
+  const deleteBtn = document.getElementById("btn-delete");
+  if (deleteBtn) deleteBtn.style.display = editable && deleteBtn.dataset.editing === "true" ? "block" : "none";
+
+  const viewerBadge = document.getElementById("viewer-badge");
+  if (viewerBadge) viewerBadge.style.display = editable ? "none" : "inline-flex";
+
+  const logoutBtn = document.getElementById("main-logout-btn");
+  if (logoutBtn) logoutBtn.style.display = currentUser ? "inline-flex" : "none";
+}
 
 function showAuthOverlay() {
   document.getElementById("auth-overlay").style.display = "flex";
@@ -31,6 +67,7 @@ function showApp() {
   document.querySelector(".app-header").style.display = "";
   document.querySelector(".day-tabs").style.display = "";
   document.querySelector(".main-content").style.display = "";
+  updateRoleBasedUI();
 }
 
 async function handleGoogleLogin(response) {
@@ -45,7 +82,7 @@ async function handleGoogleLogin(response) {
     });
 
     const data = await res.json();
-    currentUser = data.user;
+    syncCurrentUser(data.user);
 
     if (data.status === "approved") {
       localStorage.setItem("bali_token", token);
@@ -64,7 +101,7 @@ async function handleGoogleLogin(response) {
 function googleLogout() {
   localStorage.removeItem("bali_token");
   localStorage.removeItem("bali_user");
-  currentUser = null;
+  syncCurrentUser(null);
   location.reload();
 }
 
@@ -83,7 +120,7 @@ async function initAuth() {
         body: JSON.stringify({ action: "verify", token: cachedToken })
       });
       const data = await res.json();
-      currentUser = data.user;
+      syncCurrentUser(data.user);
       if (data.status === "approved") {
         showApp();
         return;
@@ -100,6 +137,11 @@ async function initAuth() {
 
   document.getElementById("auth-status").textContent = "";
 }
+
+window.googleLogout = googleLogout;
+window.canEdit = canEdit;
+window.getCurrentRole = getCurrentRole;
+window.updateRoleBasedUI = updateRoleBasedUI;
 
 function detectInAppBrowser() {
   const ua = navigator.userAgent || "";

@@ -136,7 +136,11 @@ function renderPending(list) {
         <div class="card-email">${u.email}</div>
         <div class="card-time">${u.requestedAt ? new Date(u.requestedAt).toLocaleString("zh-TW") : ""}</div>
       </div>
-      <button class="btn btn-approve" onclick="approve('${u.email}')">✓ 核准</button>
+      <select id="role-${u.email}" style="padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;">
+        <option value="viewer">viewer</option>
+        <option value="editor">editor</option>
+      </select>
+      <button class="btn btn-approve" onclick="approveWithSelectedRole('${u.email}')">✓ 核准</button>
       <button class="btn btn-reject" onclick="reject('${u.email}')">✕ 拒絕</button>
     </div>
   `).join("");
@@ -193,6 +197,11 @@ async function approve(targetEmail, role = "viewer") {
     body: JSON.stringify({ action: "approve", email: adminEmail, targetEmail, role })
   });
   loadList();
+}
+
+function approveWithSelectedRole(targetEmail) {
+  const role = document.getElementById(`role-${targetEmail}`)?.value || 'viewer';
+  return approve(targetEmail, role);
 }
 
 async function reject(targetEmail) {
