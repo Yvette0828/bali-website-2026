@@ -45,6 +45,43 @@ const headers = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function extractApprovedEmail(entry) {
+  if (typeof entry === "string") return normalizeEmail(entry);
+  if (entry && typeof entry === "object") return normalizeEmail(entry.email);
+  return "";
+}
+
+function extractRole(entry) {
+  if (entry && typeof entry === "object" && entry.role) return entry.role;
+  return "editor";
+}
+
+function isApprovedEntry(entry, email) {
+  return extractApprovedEmail(entry) === normalizeEmail(email);
+}
+
+function isSimpleEmailMatch(entry, email) {
+  if (typeof entry === "string") return normalizeEmail(entry) === normalizeEmail(email);
+  if (entry && typeof entry === "object") return normalizeEmail(entry.email) === normalizeEmail(email);
+  return false;
+}
+
+function getApprovedUser(authData, email) {
+  return (authData.approved || []).find(entry => isApprovedEntry(entry, email));
+}
+
+function isRejectedUser(authData, email) {
+  return (authData.rejected || []).some(entry => isSimpleEmailMatch(entry, email));
+}
+
+function isPendingUser(authData, email) {
+  return (authData.pending || []).some(entry => isSimpleEmailMatch(entry, email));
+}
+
 async function verifyGoogleToken(token) {
   const res = await fetch(
     `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
@@ -57,18 +94,32 @@ async function verifyGoogleToken(token) {
 }
 
 async function getAuthData() {
-  if (!AUTH_GIST_ID || !GITHUB_TOKEN) return { approved: [ADMIN_EMAIL], pending: [], rejected: [] };
+  const fallback = {
+    approved: [{ email: ADMIN_EMAIL, role: "admin" }],
+    pending: [],
+    rejected: []
+  };
+
+  if (!AUTH_GIST_ID || !GITHUB_TOKEN) return fallback;
   const res = await fetch(`https://api.github.com/gists/${AUTH_GIST_ID}`, {
     headers: {
       Authorization: `token ${GITHUB_TOKEN}`,
       Accept: "application/vnd.github.v3+json",
     }
   });
-  if (!res.ok) return { approved: [ADMIN_EMAIL], pending: [], rejected: [] };
+  if (!res.ok) return fallback;
   const data = await res.json();
   const content = data.files?.[AUTH_FILENAME]?.content;
-  try { return JSON.parse(content); }
-  catch { return { approved: [ADMIN_EMAIL], pending: [], rejected: [] }; }
+  try {
+    const parsed = JSON.parse(content);
+    return {
+      approved: Array.isArray(parsed.approved) ? parsed.approved : fallback.approved,
+      pending: Array.isArray(parsed.pending) ? parsed.pending : [],
+      rejected: Array.isArray(parsed.rejected) ? parsed.rejected : []
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 async function saveAuthData(authData) {
@@ -102,15 +153,26 @@ exports.handler = async (event) => {
 
     const authData = await getAuthData();
 
-    if (authData.approved.includes(user.email)) {
-      return { statusCode: 200, headers, body: JSON.stringify({ status: "approved", user }) };
+    const approvedEntry = getApprovedUser(authData, user.email);
+    if (approvedEntry) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          status: "approved",
+          user: {
+            ...user,
+            role: extractRole(approvedEntry)
+          }
+        })
+      };
     }
-    if (authData.rejected.includes(user.email)) {
+    if (isRejectedUser(authData, user.email)) {
       return { statusCode: 403, headers, body: JSON.stringify({ status: "rejected", user }) };
     }
 
     // Add to pending if not already there
-    if (!authData.pending.find(p => p.email === user.email)) {
+    if (!isPendingUser(authData, user.email)) {
       authData.pending.push({ email: user.email, name: user.name, requestedAt: new Date().toISOString() });
       await saveAuthData(authData);
     }
@@ -122,14 +184,18 @@ exports.handler = async (event) => {
   if (action === "approve") {
     const authData = await getAuthData();
     // Only admin can approve
-    if (!authData.approved.includes(email)) {
+    const requester = getApprovedUser(authData, email);
+    if (!requester || extractRole(requester) !== "admin") {
       return { statusCode: 403, headers, body: JSON.stringify({ error: "Not authorized" }) };
     }
-    const targetEmail = body.targetEmail;
-    const targetUser = authData.pending.find(p => p.email === targetEmail);
-    authData.pending = authData.pending.filter(p => p.email !== targetEmail);
-    authData.rejected = authData.rejected.filter(e => e !== targetEmail);
-    if (!authData.approved.includes(targetEmail)) authData.approved.push(targetEmail);
+    const targetEmail = normalizeEmail(body.targetEmail);
+    const targetRole = body.role || "viewer";
+    const targetUser = authData.pending.find(p => normalizeEmail(p.email) === targetEmail);
+    authData.pending = authData.pending.filter(p => normalizeEmail(p.email) !== targetEmail);
+    authData.rejected = authData.rejected.filter(e => !isSimpleEmailMatch(e, targetEmail));
+    if (!getApprovedUser(authData, targetEmail)) {
+      authData.approved.push({ email: targetEmail, name: targetUser?.name, role: targetRole });
+    }
     await saveAuthData(authData);
     // Send approval email
     try { await sendApprovalEmail(targetEmail, targetUser?.name || targetEmail); } catch(e) { console.error('Email failed:', e.message); }
@@ -139,13 +205,14 @@ exports.handler = async (event) => {
   // === Admin: reject user ===
   if (action === "reject") {
     const authData = await getAuthData();
-    if (!authData.approved.includes(email)) {
+    const requester = getApprovedUser(authData, email);
+    if (!requester || extractRole(requester) !== "admin") {
       return { statusCode: 403, headers, body: JSON.stringify({ error: "Not authorized" }) };
     }
-    const targetEmail = body.targetEmail;
-    authData.pending = authData.pending.filter(p => p.email !== targetEmail);
-    authData.approved = authData.approved.filter(e => e !== targetEmail); // also remove from approved
-    if (!authData.rejected.includes(targetEmail)) authData.rejected.push(targetEmail);
+    const targetEmail = normalizeEmail(body.targetEmail);
+    authData.pending = authData.pending.filter(p => normalizeEmail(p.email) !== targetEmail);
+    authData.approved = authData.approved.filter(e => !isApprovedEntry(e, targetEmail)); // also remove from approved
+    if (!isRejectedUser(authData, targetEmail)) authData.rejected.push(targetEmail);
     await saveAuthData(authData);
     return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
   }
@@ -153,7 +220,8 @@ exports.handler = async (event) => {
   // === Admin: get pending list ===
   if (action === "list") {
     const authData = await getAuthData();
-    if (!authData.approved.includes(email)) {
+    const requester = getApprovedUser(authData, email);
+    if (!requester || extractRole(requester) !== "admin") {
       return { statusCode: 403, headers, body: JSON.stringify({ error: "Not authorized" }) };
     }
     return { statusCode: 200, headers, body: JSON.stringify({ pending: authData.pending, approved: authData.approved, rejected: authData.rejected }) };
